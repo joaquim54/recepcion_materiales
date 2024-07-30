@@ -164,3 +164,35 @@ nGuia.addEventListener('input', function(e) {
         e.target.value = value.slice(0, 10); // Limita la longitud a 10 caracteres
     }
 });
+
+//si, y solo si, todos los campos estan seteados se podrá habilitar el botón de guardar
+
+document.addEventListener('DOMContentLoaded', function() {
+function habilitarAgregarMateriales() {
+    if (document.getElementById('nPlanilla').value.trim() !== "" &&
+        document.getElementById('zona').value.trim() !== "" &&
+        document.getElementById('tipo').value.trim() !== "" &&
+        document.getElementById('fecha').value.trim() !== "" &&
+        document.getElementById('bodegaOrigen').value.trim() !== "" &&
+        document.getElementById('bodegaDestino').value.trim() !== "" &&
+        document.getElementById('proveedor').value.trim() !== "" &&
+        document.getElementById('nGuia').value.trim() !== "" &&
+        document.getElementById('code_material').value.trim() !== "" &&
+        document.getElementById('id_embalaje').value.trim() !== "" &&
+        document.getElementById('codigo_bulto_material').value.trim() !== "" &&
+        document.getElementById('fechaVencimiento').value.trim() !== "" &&
+        document.getElementById('rusulto_cant_bult').value.trim() !== "" &&
+        document.getElementById('unidad_bultos').value.trim() !== "" &&
+        document.getElementById('cant_rec').value.trim() !== "") {
+        document.getElementById('btnAgregarMaterial').removeAttribute('disabled');
+    } else {
+        document.getElementById('btnAgregarMaterial').setAttribute('disabled', 'disabled');
+    }
+}
+
+// Asignar el evento a los campos del formulario para habilitar el botón de guardar (lo único que hacemos es recorrer los campos en busca de alguno que este vacio)
+document.querySelectorAll('#nPlanilla, #zona, #tipo, #fecha, #bodegaOrigen, #bodegaDestino, #proveedor, #nGuia, #code_material, #id_embalaje, #codigo_bulto_material, #fechaVencimiento, #resultado_cant_bult, #unidad_bultos, #cant_rec')
+.forEach(item => {
+    item.addEventListener('input', habilitarAgregarMateriales);
+    });
+});
