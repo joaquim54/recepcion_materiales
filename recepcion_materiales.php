@@ -116,7 +116,7 @@ $hoy = date("Y-m-d");
                         </div>
                         <div class="form-group">
                             <label for="nGuia">N° Gu&iacute;a:</label>
-                            <input type="text" id="nGuia" name="nGuia" class="form-control" value="">
+                            <input type="text" id="nGuia" name="nGuia" class="form-control" value="" require>
                         </div>
                     </div>
                 </div>
