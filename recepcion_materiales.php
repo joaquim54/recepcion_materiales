@@ -37,8 +37,8 @@ $hoy = date("Y-m-d");
                     <label for="zona">Zona:</label>
                     <select id="zona" name="zona" class="form-control">
                         <option value="" disabled selected>Seleccione</option>
-                        <option value="C CENTRAL">C CENTRAL</option>
-                        <option value="E EXTERNOS">E EXTERNOS</option>
+                        <option value="C">C CENTRAL</option>
+                        <option value="E">E EXTERNOS</option>
                     </select>
                 </div>
                 <div class="section">
@@ -55,7 +55,7 @@ $hoy = date("Y-m-d");
             </div>
 
             <div class="flex-container">
-                <div class="section">
+            <div class="section">
                     <label for="tipo">Tipo:</label>
                     <select id="tipo" name="tipo" class="form-control" disabled>
                         <option value="" disabled selected>Seleccione</option>
@@ -63,15 +63,20 @@ $hoy = date("Y-m-d");
                 </div>
                 <div class="section">
                     <label for="fecha">Fecha:</label>
-                    <input type="date" id="fecha" name="fecha" class="form-control" value="<?php echo htmlspecialchars($hoy); ?>" readonly>
+                    <input type="date" id="fecha" name="fecha" class="form-control" value="<?php echo htmlspecialchars($hoy); ?>">
                 </div>
             </div>
-            <div class="text-center">
-                <button class="btn btn-primary" id="btnBusquedaOrden" role="button" disabled>
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    B&uacute;squeda orden de compra
+            <div class="text-center d-flex justify-content-center">
+                <button class="btn btn-primary mr-2" id="btnBusquedaOrden" role="button" disabled>
+                    <i class="fa-solid fa-magnifying-glass-plus"></i>
+                    B&uacute;squeda de planilla
+                </button>
+                <button type="button" id="btnLimpiar" class="btn btn-secondary">
+                    <i class="fa-solid fa-eraser"></i>
+                    Limpiar
                 </button>
             </div>
+
         </div>
     </div>
 
@@ -84,7 +89,7 @@ $hoy = date("Y-m-d");
                         <h3>Origen de la Recepci&oacute;n</h3>
                         <div class="form-group">
                             <label for="bodegaOrigen">Bodega:</label>
-                            <select id="bodegaOrigen" name="bodegaOrigen" class="form-control">
+                            <select id="bodegaOrigen" name="bodegaOrigen" class="form-control" disabled>
                                 <option value="" selected>Elija una bodega</option>
                             </select>
                         </div>
@@ -133,67 +138,75 @@ $hoy = date("Y-m-d");
                         <textarea id="observacion" name="observacion" class="form-control"></textarea>
                     </div>
                 </div>
-            
 
-            <div class="form-row">
-                <div class="col-md-6">
-                    <div class="text-center">
-                        <h3>Ingreso de materiales</h3>
-                    </div>
-                    <div class="form-group">
-                        <label for="code_material">C&oacute;digo:</label>
+
+                <div class="form-row">
+                    <div class="col-md-6">
                         <div class="text-center">
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-tipo-material" style="margin-bottom: 10px;">
-                                <i class="fa-solid fa-filter" style="color: #ffffff;"></i>
-                                Buscar material
-                            </button>
-
+                            <h3>Ingreso de materiales</h3>
                         </div>
-                        <input type="text" id="code_material" name="code_material" class="form-control" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="id_material">Embalaje:</label>
-                        <input type="text" id="id_embalaje" name="id_embalaje" class="form-control" readonly>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <h3>&nbsp;</h3>
-                    <div hidden id="qr_container" class="form-group">
-                        <img id="qr">
-                    </div>
-                </div>
-            </div>
-            </form>
-            <h3>&nbsp;</h3>
-            <div class="form-group d-flex">
-                <div class="flex-grow-1 ml-2">
-                    <label for="id_bulto_material">Bulto material:</label>
-                    <input type="text" id="codigo_bulto_material" name="codigo_bulto_material" class="form-control" value="" readonly>
-                </div>
-                <div class="flex-grow-1 ml-2">
-                    <label for="cantidad">Fecha vencimiento:</label>
-                    <input type="date" id="fechaVencimiento" name="fechaVencimiento" class="form-control">
-                </div>
-                <div class="flex-grow-1 ml-2">
-                    <label for="rusulto_cant_bult">Cant. Bultos:</label>
-                    <input type="text" id="rusulto_cant_bult" name="rusulto_cant_bult" class="form-control">
-                </div>
-                <div class="flex-grow-1 ml-2">
-                    <label for="unidad_bultos">Unid. x Bultos:</label>
-                    <input type="text" id="unidad_bultos" name="unidad_bultos" class="form-control">
-                </div>
-                <div class="flex-grow-1 ml-2">
-                    <label for="unidad_bultos">Cantidad rec.:</label>
-                    <input type="text" id="cant_rec" name="cant_rec" class="form-control">
-                </div>
-            </div>
+                        <div class="form-group">
+                            <label for="code_material">C&oacute;digo:</label>
+                            <div class="text-center">
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-tipo-material" style="margin-bottom: 10px;">
+                                    <i class="fa-solid fa-filter"></i>
+                                    Buscar material
+                                </button>
 
-            <h3>&nbsp;</h3>
-            <div class="text-center">
-                <button type="button" id="btnAgregarMaterial" name="btnAgregarMaterial" class="btn btn-primary" data-toggle="collapse" href="#mostrar_table" role="button" aria-expanded="false" aria-controls="mostrar_table" disabled>
-                    <i class="fa-solid fa-plus"></i>
-                    Agregar materiales
-                </button>
+                            </div>
+                            <input type="text" id="code_material" name="code_material" class="form-control" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="id_material">Descripción:</label>
+                            <input type="text" id="id_embalaje" name="id_embalaje" class="form-control" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h3>&nbsp;</h3>
+                        <!-- acá se instanciará el qr por posición para que quede similar a sdt-->
+                    </div>
+                </div>
+                </form>
+                <h3>&nbsp;</h3>
+                <div class="form-group d-flex">
+                    <div class="flex-grow-1 ml-2">
+                        <label for="cantidad">Fecha vencimiento:</label>
+                        <input type="date" id="fechaVencimiento" name="fechaVencimiento" class="form-control" value="<?php echo htmlspecialchars($hoy); ?>">
+                    </div>
+                    <div class="flex-grow-1 ml-2">
+                        <label for="rusulto_cant_bult">Cant. Bultos:</label>
+                        <input type="text" id="rusulto_cant_bult" name="rusulto_cant_bult" class="form-control">
+                    </div>
+                    <div class="flex-grow-1 ml-2">
+                        <label for="unidad_bultos">Unid. x Bultos:</label>
+                        <input type="text" id="unidad_bultos" name="unidad_bultos" class="form-control">
+                    </div>
+                    <div class="flex-grow-1 ml-2">
+                        <label for="unidad_bultos">Cantidad rec.:</label>
+                        <input type="text" id="cant_rec" name="cant_rec" class="form-control" readonly>
+                    </div>
+                    <div class="flex-grow-1 ml-2">
+                        <label for="id_bulto_material">Bulto material:</label>
+                        <input type="text" id="codigo_bulto_material" name="codigo_bulto_material" class="form-control" value="" readonly>
+                    </div>
+                </div>
+
+                <h3>&nbsp;</h3>
+                <div class="text-center d-flex justify-content-center">
+                    <button type="button" id="btnAgregarMaterial" name="btnAgregarMaterial" class="btn btn-primary mr-2" data-toggle="collapse" href="#mostrar_table" role="button" aria-expanded="false" aria-controls="mostrar_table" disabled>
+                        <i class="fa-solid fa-plus"></i>
+                        Agregar materiales
+                    </button>
+                    <button type="button" id="btnImprimirTodo" name="btnImprimirTodo" class="btn btn-secondary" role="button" aria-expanded="false" aria-controls="mostrar_table" disabled>
+                        <i class="fa-solid fa-print"></i>
+                        Imprimir todo
+                    </button>
+                </div>
+                <div class="text-center">
+                    <button hidden type="button" id="btnOtroManerial" name="btnOtroManerial" class="btn btn-primary" role="button" aria-expanded="false">
+                        <i class="fa-solid fa-plus"></i>
+                        agregar otro material
+                    </button>
                 </div>
             </div>
         </div>
@@ -220,22 +233,7 @@ $hoy = date("Y-m-d");
                             </tr>
                         </thead>
                         <tbody>
-                            <?php
-                            $correlativo = 1;
-                            ?>
-                            <tr>
-                                <th></th>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td><?php echo $correlativo++ ?></td>
-                                <td></td>
-                                <td></td>
-                                <td><?php echo htmlspecialchars($codigo_bulto_material); ?></td>
-                                <td><button type="button" id="3" class="btn btn-primary">Editar</button></td>
-                            </tr>
+
                         </tbody>
                     </table>
                 </div>
@@ -258,7 +256,7 @@ $hoy = date("Y-m-d");
                 </div>
                 <div class="modal-body">
                     <?php
-                    $sql = "SELECT s.SUBITEM, s.DES_SITEM, s.COD_UNID, '0,000000' AS valor FROM Erpfrusys.dbo.SUBITEM s where s.COD_TEM = " . $cod_tem;
+                    $sql = "SELECT s.SUBITEM, s.DES_SITEM, s.COD_UNID, '1,000000' AS valor FROM Erpfrusys.dbo.SUBITEM s where s.COD_TEM = " . $cod_tem;
                     $result = odbc_exec($conn, $sql);
                     ?>
                     <table id="table-materiales" class="table table-striped display">
@@ -305,10 +303,32 @@ $hoy = date("Y-m-d");
             });
         });
     </script>
+    <!-- Modal para mostrar el QR -->
+<div class="modal fade" id="qrModal" tabindex="-1" role="dialog" aria-labelledby="qrModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="qrModalLabel">Código QR</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <img id="qrImage" src="" alt="Código QR" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
     <!-- jQuery y Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
     <script src="js/recepcion_materiales.js"></script>
+
 </body>
 
 </html>

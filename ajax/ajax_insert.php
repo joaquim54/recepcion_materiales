@@ -1,9 +1,8 @@
 <?php
 session_start();
-include '../con_sql.php';
+include '../con_sql_prueba.php';
 
-
-//entregar los valores para hacer el primer insert mediante ajax 
+// Recibir los datos enviados por la solicitud AJAX
 $zona = isset($_POST['zona']) ? $_POST['zona'] : '';
 $nplanilla = isset($_POST['nPlanilla']) ? $_POST['nPlanilla'] : '';
 $tipo = isset($_POST['tipo']) ? $_POST['tipo'] : '';
@@ -21,9 +20,43 @@ $fechaVencimiento = isset($_POST['fechaVencimiento']) ? $_POST['fechaVencimiento
 $rusulto_cant_bult = isset($_POST['rusulto_cant_bult']) ? $_POST['rusulto_cant_bult'] : '';
 $unidad_bultos = isset($_POST['unidad_bultos']) ? $_POST['unidad_bultos'] : '';
 $cant_rec = isset($_POST['cant_rec']) ? $_POST['cant_rec'] : '';
+$correlativo = isset($_POST['correlativo']) ? $_POST['correlativo'] : '';
 
-//insertar en la tabla de cuerpo de SDT
+// Comenzar una transacción
+odbc_autocommit($conn, FALSE);
 
-$sql ="";
+// Consulta de inserción en la tabla TIT_RECEPCIONMATERIALES
+$sql_titulo = "INSERT INTO Bodega.dbo.TIT_RECEPCIONMATERIALES
+(COD_EMP, COD_TEM, ZON, PLANILLA_REC, COD_BOD, COD_MOV, CODIGOCLIENTE,
+FECHA_RECEPCION, NRO_GUIA, COD_BOD_ORIGEN, GUIA_OBJETADA, OBSERVACION) 
+VALUES 
+('$cod_emp', '$cod_tem', '$zona', '$nplanilla', '$bodegaDestino', '$tipo', '$proveedor',
+CONVERT(smalldatetime, '$fecha', 120), '$nGuia', '$bodegaOrigen', '$guiaObjeta', '$observacion');";
 
+// Consulta de inserción en la tabla RECEPCIONMATERIALES_
+$sql_cuerpo = "INSERT INTO Bodega.dbo.RECEPCIONMATERIALES_
+(COD_EMP, COD_TEM, ZON, PLANILLA_REC, CORRELATIVO, SUBITEM, CAN_REC, VALORCOMPRA,
+VALORVENTA, VALORCOMPRAMO, ID_ORDEN, TIPO_CAMB, MONEDA, porc_humedad, valorf_pmp, IdRec,
+VALORCOMPRA_US, FECHA_VENC, ID_LOTE_VENC, IdEstiba) 
+VALUES 
+('$cod_emp', '$cod_tem', '$zona', '$nplanilla', '$correlativo', '$code_material', '$cant_rec', '',
+'', '', '', '', '', '', '', '', '', '$fechaVencimiento', '', '');";
+
+echo "SQL Cuerpo: " . $sql_titulo . "<br>";
+
+// Ejecutar ambas consultas
+$result_titulo = odbc_exec($conn, $sql_titulo);
+$result_cuerpo = odbc_exec($conn, $sql_cuerpo);
+
+// Verificar resultados y realizar commit o rollback
+if ($result_titulo && $result_cuerpo) {
+    odbc_commit($conn);
+    echo "El registro se ha insertado correctamente";
+} else {
+    odbc_rollback($conn);
+    echo "Error al insertar el registro";
+}
+
+// Finalizar la transacción
+odbc_autocommit($conn, TRUE);
 ?>

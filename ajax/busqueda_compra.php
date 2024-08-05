@@ -24,48 +24,48 @@ if (isset($_POST['nPlanilla'])) {
             $data[] = $row;
         }
 
-        
         $bodegas_origen = array();
         $bodegas_destino = array();
         if (empty($data)) {
-            $sql_bodegas = "SELECT CONCAT(COD_BOD, ' ', NOM_BOD) AS bodegas 
+            $sql_bodegas = "SELECT COD_BOD, CONCAT(COD_BOD, ' ', NOM_BOD) AS bodegas 
                             FROM erpfrusys.dbo.BODEGAS 
                             WHERE COD_TEM = '$cod_tem'";
             $result_bodegas = odbc_exec($conn, $sql_bodegas);
 
             if ($result_bodegas) {
                 while ($row = odbc_fetch_array($result_bodegas)) {
-                    $bodegas_origen[] = $row['bodegas'];
-                    $bodegas_destino[] = $row['bodegas'];
+                    $bodegas_origen[] = array('codigo' => $row['COD_BOD'], 'nombre' => $row['bodegas']);
+                    $bodegas_destino[] = array('codigo' => $row['COD_BOD'], 'nombre' => $row['bodegas']);
                 }
             }
 
             // Obtener todos los tipos si no hay coincidencias
-            $sql_tipos = "SELECT CONCAT(tm.COD_MOV, ' ', tm.DES_MOV) as des_movimiento 
+            $sql_tipos = "SELECT tm.COD_MOV, CONCAT(tm.COD_MOV, ' ', tm.DES_MOV) as des_movimiento 
                         FROM erpfrusys.dbo.TIP_MOV tm
                         WHERE tm.DES_MOV <> ''";
             $result_tipos = odbc_exec($conn, $sql_tipos);
             while ($row = odbc_fetch_array($result_tipos)) {
-                $data[] = $row;
+                $data[] = array('codigo' => $row['COD_MOV'], 'nombre' => $row['des_movimiento']);
             }
         } else {
             foreach ($data as $item) {
-                if (!in_array($item['bodega_ori'], $bodegas_origen)) {
-                    $bodegas_origen[] = $item['bodega_ori'];
+                if (!in_array($item['bodega_ori'], array_column($bodegas_origen, 'nombre'))) {
+                    $bodegas_origen[] = array('codigo' => $item['origen'], 'nombre' => $item['bodega_ori']);
                 }
-                if (!in_array($item['bodega_destino'], $bodegas_destino)) {
-                    $bodegas_destino[] = $item['bodega_destino'];
+                if (!in_array($item['bodega_destino'], array_column($bodegas_destino, 'nombre'))) {
+                    $bodegas_destino[] = array('codigo' => $item['destino'], 'nombre' => $item['bodega_destino']);
                 }
             }
         }
-        
-        $sql_proveedores = "SELECT CONCAT(CodigoCliente,' ',NombreCliente) as concat_prov 
+
+        $proveedores = array();
+        $sql_proveedores = "SELECT CodigoCliente, CONCAT(CodigoCliente,' ',NombreCliente) as concat_prov 
         FROM erpfrusys.dbo.PROVEEDORES 
         WHERE COD_TEM = '$cod_tem' AND COD_EMP = 'MER'";
         $result_proveedores = odbc_exec($conn, $sql_proveedores);
         if ($result_proveedores) {
             while ($row = odbc_fetch_array($result_proveedores)) {
-                $proveedores[] = $row['concat_prov'];
+                $proveedores[] = array('codigo' => $row['CodigoCliente'], 'nombre' => $row['concat_prov']);
             }
         }
 
