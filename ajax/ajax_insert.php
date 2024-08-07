@@ -22,41 +22,41 @@ $unidad_bultos = isset($_POST['unidad_bultos']) ? $_POST['unidad_bultos'] : '';
 $cant_rec = isset($_POST['cant_rec']) ? $_POST['cant_rec'] : '';
 $correlativo = isset($_POST['correlativo']) ? $_POST['correlativo'] : '';
 
-// Comenzar una transacción
-odbc_autocommit($conn, FALSE);
+// Verificar si ya existe un registro en TIT_RECEPCIONMATERIALES para la planilla específica
+$sql_check_titulo = "SELECT COUNT(*) AS count FROM Bodega.dbo.TIT_RECEPCIONMATERIALES WHERE PLANILLA_REC = '$nplanilla'";
+$result_check_titulo = odbc_exec($conn, $sql_check_titulo);
+$row_check_titulo = odbc_fetch_array($result_check_titulo);
 
-// Consulta de inserción en la tabla TIT_RECEPCIONMATERIALES
-$sql_titulo = "INSERT INTO Bodega.dbo.TIT_RECEPCIONMATERIALES
-(COD_EMP, COD_TEM, ZON, PLANILLA_REC, COD_BOD, COD_MOV, CODIGOCLIENTE,
-FECHA_RECEPCION, NRO_GUIA, COD_BOD_ORIGEN, GUIA_OBJETADA, OBSERVACION) 
-VALUES 
-('$cod_emp', '$cod_tem', '$zona', '$nplanilla', '$bodegaDestino', '$tipo', '$proveedor',
-CONVERT(smalldatetime, '$fecha', 120), '$nGuia', '$bodegaOrigen', '$guiaObjeta', '$observacion');";
+if ($row_check_titulo['count'] == 0) {
+    // Insertar en TIT_RECEPCIONMATERIALES (solo si no existe)
+    $sql_titulo = "INSERT INTO Bodega.dbo.TIT_RECEPCIONMATERIALES
+    (COD_EMP, COD_TEM, ZON, PLANILLA_REC, COD_BOD, COD_MOV, CODIGOCLIENTE,
+    FECHA_RECEPCION, NRO_GUIA, COD_BOD_ORIGEN, GUIA_OBJETADA, OBSERVACION) 
+    VALUES 
+    ('$cod_emp', '$cod_tem', '$zona', '$nplanilla', '$bodegaDestino', '$tipo', '$proveedor',
+    CONVERT(smalldatetime, '$fecha', 120), '$nGuia', '$bodegaOrigen', '$guiaObjeta', '$observacion');";
 
-// Consulta de inserción en la tabla RECEPCIONMATERIALES_
-$sql_cuerpo = "INSERT INTO Bodega.dbo.RECEPCIONMATERIALES_
-(COD_EMP, COD_TEM, ZON, PLANILLA_REC, CORRELATIVO, SUBITEM, CAN_REC, VALORCOMPRA,
-VALORVENTA, VALORCOMPRAMO, ID_ORDEN, TIPO_CAMB, MONEDA, porc_humedad, valorf_pmp, IdRec,
-VALORCOMPRA_US, FECHA_VENC, ID_LOTE_VENC, IdEstiba) 
-VALUES 
-('$cod_emp', '$cod_tem', '$zona', '$nplanilla', '$correlativo', '$code_material', '$cant_rec', '',
-'', '', '', '', '', '', '', '', '', '$fechaVencimiento', '', '');";
+    $result_titulo = odbc_exec($conn, $sql_titulo);
 
-echo "SQL Cuerpo: " . $sql_titulo . "<br>";
-
-// Ejecutar ambas consultas
-$result_titulo = odbc_exec($conn, $sql_titulo);
-$result_cuerpo = odbc_exec($conn, $sql_cuerpo);
-
-// Verificar resultados y realizar commit o rollback
-if ($result_titulo && $result_cuerpo) {
-    odbc_commit($conn);
-    echo "El registro se ha insertado correctamente";
-} else {
-    odbc_rollback($conn);
-    echo "Error al insertar el registro";
+    if (!$result_titulo) {
+        echo "Error al insertar el registro del título: " . odbc_errormsg($conn);
+        exit;
+    }
 }
 
-// Finalizar la transacción
-odbc_autocommit($conn, TRUE);
+// Insertar en RECEPCIONMATERIALES (siempre)
+$sql_cuerpo = "INSERT INTO Bodega.dbo.RECEPCIONMATERIALES
+(COD_EMP, COD_TEM, ZON, PLANILLA_REC, CORRELATIVO, SUBITEM, CAN_REC,
+ID_ORDEN, FECHA_VENC) 
+VALUES 
+('$cod_emp', '$cod_tem', '$zona', '$nplanilla', '$correlativo', '$code_material', '$cant_rec',
+'', '$fechaVencimiento');";
+
+$result_cuerpo = odbc_exec($conn, $sql_cuerpo);
+
+if ($result_cuerpo) {
+    echo "El registro se ha insertado correctamente";
+} else {
+    echo "Error al insertar el registro del cuerpo: " . odbc_errormsg($conn);
+}
 ?>

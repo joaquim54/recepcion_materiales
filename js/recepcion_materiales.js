@@ -8,9 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var proveedor = document.getElementById('proveedor'); 
     var nGuia = document.getElementById('nGuia');
     var btnAgregarMaterial = document.getElementById('btnAgregarMaterial');
-    var btnOtroManerial = document.getElementById('btnOtroManerial');
 
-    // Habilita o deshabilita el botón de búsqueda y el campo tipo dependiendo si hay un valor en nPlanilla
     function toggleBusquedaButton() {
         var planillaValue = nPlanilla.value.trim();
         if (planillaValue !== "") {
@@ -22,7 +20,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Asegura que solo se puedan ingresar valores numéricos en el campo nPlanilla
     nPlanilla.addEventListener('input', function(e) {
         var value = e.target.value;
         if (/[^0-9]/.test(value)) {
@@ -31,7 +28,6 @@ document.addEventListener('DOMContentLoaded', function() {
         toggleBusquedaButton();
     });
 
-    // Llama a la función toggleBusquedaButton cuando se presiona Enter en el campo nPlanilla
     nPlanilla.addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
             e.preventDefault();
@@ -40,63 +36,96 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Realiza una búsqueda AJAX cuando se hace clic en el botón de búsqueda
     btnBusquedaOrden.addEventListener('click', function() {
         var nPlanillaValue = nPlanilla.value.trim();
     
         $.ajax({
-            url: 'ajax/busqueda_compra.php', // URL del script PHP para manejar la solicitud
-            type: 'POST', // Método de solicitud
+            url: 'ajax/busqueda_compra.php',
+            type: 'POST',
             data: {
-                nPlanilla: nPlanillaValue // Datos enviados al servidor
+                nPlanilla: nPlanillaValue 
             },
             success: function(response) {
-                var result = JSON.parse(response); // Parsear la respuesta JSON
-                var data = result.data; // Datos del movimiento
-                var bodegasOrigen = result.bodegas_origen; // Bodegas de origen
-                var bodegasDestino = result.bodegas_destino; // Bodegas de destino
-                var proveedores = result.proveedores; // Proveedores
+                //console.log(response); objeto JSON en consola para ver si se esta recibiendo la informacion (planilla ya usada)
+                try {
+                    var result = JSON.parse(response);
+                } catch (e) {
+                    console.error("Error parsing JSON: ", e);
+                    Swal.fire({
+                        position: "center",
+                        icon: "error",
+                        title: "Error en la búsqueda de la compra",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    return;
+                }
+    
+                var data = result.data || []; 
+                var bodegasOrigen = result.bodegas_origen || []; 
+                var bodegasDestino = result.bodegas_destino || []; 
+                var proveedores = result.proveedores || []; 
+                var guia = result.nro_guia || [];
+
+    
                 tipo.innerHTML = '<option value="" disabled selected>Seleccione</option>';
                 bodegaOrigen.innerHTML = '<option value="" disabled selected>Elija una bodega</option>';
                 bodegaDestino.innerHTML = '<option value="" disabled selected>Elija una bodega</option>';
-                proveedor.innerHTML = '<option value="" disabled disabled selected>Elija un proveedor</option>'; 
+                proveedor.innerHTML = '<option value="" disabled selected>Elija un proveedor</option>'; 
     
                 var addedOptions = new Set();
     
                 if (result.error) {
                     alert(result.error); // Muestra un mensaje de error si hay algún problema
                 } else {
+                    // Llenado del selector Tipo
+                    var addedOptions = new Set();
                     data.forEach(function(item) {
-                        var optionValue = item.nombre;
-                        if (!addedOptions.has(optionValue)) {
-                            addedOptions.add(optionValue);
+                        if (item.des_movimiento && item.cod_mov && !addedOptions.has(item.cod_mov)) {
                             var option = document.createElement('option');
-                            option.value = item.codigo;
-                            option.text = optionValue;
+                            option.value = item.cod_mov;
+                            option.text = item.des_movimiento;
                             tipo.appendChild(option);
+                            addedOptions.add(item.cod_mov);
                         }
                     });
     
+                    // Llenado del selector Bodegas Origen
                     bodegasOrigen.forEach(function(bodega) {
-                        var option = document.createElement('option');
-                        option.value = bodega.codigo;
-                        option.text = bodega.nombre;
-                        bodegaOrigen.appendChild(option);
+                        if (bodega.nombre && bodega.codigo) { 
+                            var option = document.createElement('option');
+                            option.value = bodega.codigo;
+                            option.text = bodega.nombre;
+                            bodegaOrigen.appendChild(option);
+                        }
                     });
     
+                    // Llenado del selector Bodegas Destino
                     bodegasDestino.forEach(function(bodega) {
-                        var option = document.createElement('option');
-                        option.value = bodega.codigo;
-                        option.text = bodega.nombre;
-                        bodegaDestino.appendChild(option);
+                        if (bodega.nombre && bodega.codigo) { 
+                            var option = document.createElement('option');
+                            option.value = bodega.codigo;
+                            option.text = bodega.nombre;
+                            bodegaDestino.appendChild(option);
+                        }
                     });
     
+                    // Llenado del selector Proveedores
                     proveedores.forEach(function(prov) {
-                        var option = document.createElement('option');
-                        option.value = prov.codigo;
-                        option.text = prov.nombre;
-                        proveedor.appendChild(option);
+                        if (prov.nombre && prov.codigo) { 
+                            var option = document.createElement('option');
+                            option.value = prov.codigo;
+                            option.text = prov.nombre;
+                            proveedor.appendChild(option);
+                        }
                     });
+
+                        if (guia.length > 0) {
+                            nGuia.value = guia[0]; 
+                        } else {
+                            nGuia.value = ''; 
+                        }
+                    
     
                     // Abrir el collapse si hay opciones disponibles
                     if (addedOptions.size > 0 || bodegasOrigen.length > 0 || bodegasDestino.length > 0 || proveedores.length > 0) { 
@@ -109,6 +138,10 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+    
+    
+    
+
 
     function agregarMateriales() {
         var cantBultos = parseInt(document.getElementById('rusulto_cant_bult').value, 10);
@@ -244,7 +277,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     btnAgregarMaterial.addEventListener('click', agregarMateriales);
-    btnOtroManerial.addEventListener('click', agregarMateriales);
 
     function habilitarAgregarMateriales() {
         if (document.getElementById('nPlanilla').value.trim() !== "" &&
@@ -260,9 +292,6 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('rusulto_cant_bult').value.trim() !== "" &&
             document.getElementById('unidad_bultos').value.trim() !== "" &&
             document.getElementById('cant_rec').value.trim() !== "") {
-            document.getElementById('btnAgregarMaterial').removeAttribute('disabled');
-        } else {
-            document.getElementById('btnAgregarMaterial').setAttribute('disabled', 'disabled');
         }
     }
 

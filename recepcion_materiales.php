@@ -202,12 +202,6 @@ $hoy = date("Y-m-d");
                         Imprimir todo
                     </button>
                 </div>
-                <div class="text-center">
-                    <button hidden type="button" id="btnOtroManerial" name="btnOtroManerial" class="btn btn-primary" role="button" aria-expanded="false">
-                        <i class="fa-solid fa-plus"></i>
-                        agregar otro material
-                    </button>
-                </div>
             </div>
         </div>
     </div>
