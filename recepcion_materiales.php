@@ -55,7 +55,7 @@ $hoy = date("Y-m-d");
             </div>
 
             <div class="flex-container">
-            <div class="section">
+                <div class="section">
                     <label for="tipo">Tipo:</label>
                     <select id="tipo" name="tipo" class="form-control" disabled>
                         <option value="" disabled selected>Seleccione</option>
@@ -193,7 +193,7 @@ $hoy = date("Y-m-d");
 
                 <h3>&nbsp;</h3>
                 <div class="text-center d-flex justify-content-center">
-                    <button type="button" id="btnAgregarMaterial" name="btnAgregarMaterial" class="btn btn-primary mr-2" data-toggle="collapse" href="#mostrar_table" role="button" aria-expanded="false" aria-controls="mostrar_table" disabled>
+                    <button type="button" id="btnAgregarMaterial" name="btnAgregarMaterial" class="btn btn-primary mr-2" role="button" aria-expanded="false" aria-controls="mostrar_table" disabled>
                         <i class="fa-solid fa-plus"></i>
                         Agregar materiales
                     </button>
@@ -202,6 +202,7 @@ $hoy = date("Y-m-d");
                         Imprimir todo
                     </button>
                 </div>
+
             </div>
         </div>
     </div>
@@ -298,24 +299,25 @@ $hoy = date("Y-m-d");
         });
     </script>
     <!-- Modal para mostrar el QR -->
-<div class="modal fade" id="qrModal" tabindex="-1" role="dialog" aria-labelledby="qrModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="qrModalLabel">Código QR</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body text-center">
-                <img id="qrImage" src="" alt="Código QR" />
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+    <div class="modal fade" id="qrModal" tabindex="-1" role="dialog" aria-labelledby="qrModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="qrModalLabel">Código QR</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-center">
+                    
+                    <img id="qrImage" src="" alt="Código QR" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
     <!-- jQuery y Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
