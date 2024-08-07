@@ -21,6 +21,8 @@ $rusulto_cant_bult = isset($_POST['rusulto_cant_bult']) ? $_POST['rusulto_cant_b
 $unidad_bultos = isset($_POST['unidad_bultos']) ? $_POST['unidad_bultos'] : '';
 $cant_rec = isset($_POST['cant_rec']) ? $_POST['cant_rec'] : '';
 $correlativo = isset($_POST['correlativo']) ? $_POST['correlativo'] : '';
+$codigo_bulto_material = isset($_POST['id_bulto_material']) ? $_POST['id_bulto_material'] : '';
+
 
 // Verificar si ya existe un registro en TIT_RECEPCIONMATERIALES para la planilla específica
 $sql_check_titulo = "SELECT COUNT(*) AS count FROM Bodega.dbo.TIT_RECEPCIONMATERIALES WHERE PLANILLA_REC = '$nplanilla'";
@@ -47,10 +49,12 @@ if ($row_check_titulo['count'] == 0) {
 // Insertar en RECEPCIONMATERIALES (siempre)
 $sql_cuerpo = "INSERT INTO Bodega.dbo.RECEPCIONMATERIALES
 (COD_EMP, COD_TEM, ZON, PLANILLA_REC, CORRELATIVO, SUBITEM, CAN_REC,
-ID_ORDEN, FECHA_VENC) 
+ID_ORDEN, FECHA_VENC, id_lote_venc) 
 VALUES 
 ('$cod_emp', '$cod_tem', '$zona', '$nplanilla', '$correlativo', '$code_material', '$cant_rec',
-'', '$fechaVencimiento');";
+'', '$fechaVencimiento', '$codigo_bulto_material');";
+
+echo $sql_cuerpo;
 
 $result_cuerpo = odbc_exec($conn, $sql_cuerpo);
 
