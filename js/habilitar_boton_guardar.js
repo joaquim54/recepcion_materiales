@@ -1,5 +1,5 @@
 function habilitarAgregarMateriales() {
-    if (document.getElementById('nPlanilla').value.trim() !== "" &&
+    const camposCompletos = document.getElementById('nPlanilla').value.trim() !== "" &&
         document.getElementById('zona').value.trim() !== "" &&
         document.getElementById('tipo').value.trim() !== "" &&
         document.getElementById('fecha').value.trim() !== "" &&
@@ -11,12 +11,19 @@ function habilitarAgregarMateriales() {
         document.getElementById('fechaVencimiento').value.trim() !== "" &&
         document.getElementById('rusulto_cant_bult').value.trim() !== "" &&
         document.getElementById('unidad_bultos').value.trim() !== "" &&
-        document.getElementById('cant_rec').value.trim() !== "") {
-            document.getElementById('btnAgregarMaterial').removeAttribute('disabled');
-        } else {
-            document.getElementById('btnAgregarMaterial').setAttribute('disabled', 'disabled');
-        }
+        document.getElementById('cant_rec').value.trim() !== "";
+
+    if (camposCompletos) {
+        document.getElementById('btnAgregarMaterial').removeAttribute('disabled');
+    } else {
+        document.getElementById('btnAgregarMaterial').setAttribute('disabled', 'disabled');
+        document.getElementById('btnImprimirTodo').setAttribute('disabled', 'disabled'); // Deshabilitar Imprimir si los campos no están completos
+    }
 }
+
+document.getElementById('btnAgregarMaterial').addEventListener('click', function() {
+    document.getElementById('btnImprimirTodo').removeAttribute('disabled');
+});
 
 const campos = ['#nPlanilla', '#zona', '#tipo', '#fecha', '#bodegaDestino', '#proveedor', '#nGuia', '#code_material', '#id_embalaje', '#fechaVencimiento', '#rusulto_cant_bult', '#unidad_bultos', '#cant_rec'];
 campos.forEach(selector => {

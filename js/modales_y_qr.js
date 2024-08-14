@@ -83,7 +83,7 @@
         $('#qrModal').modal('show');
     });
 
-
+//esta función imprime de manera unitaria, la etiqueta
     function imprime() {
         var qrImageUrl = $('#qrImage').attr('src');  
         var familia = document.getElementById('modal-familia').innerText.trim();
@@ -101,23 +101,7 @@
     }
     
 
-    function imprimirEtiquetas(etiquetas) {
-        $.ajax({
-            url: 'ruta_al_script/pdf_unitario.php', 
-            type: 'POST',
-            data: { etiquetas: JSON.stringify(etiquetas) },
-            success: function(response) {
-                // Abre el PDF generado
-                window.open('ruta_al_pdf/Etiquetas.pdf', '_blank');
-            },
-            error: function(xhr, status, error) {
-                console.error('Error al generar etiquetas:', status, error);
-            }
-        });
-    }
-    
-
-//crear arreglo y mandar como arreglo etiquetas multiples 
+//acá imprime todas las etiquetas (para futuras modificaciones siempre modificar el array) 
     $('#btnImprimirTodo').click(function() {
         var etiquetas = [];
         
@@ -126,7 +110,7 @@
         var empresa = "PACKING MERQUEN SPA";
         var familia = $('#zona').val();
     
-        $('#materialesTable tbody tr').each(function(index, rowElement) {
+        $('#table-materiales tbody tr').each(function(index, rowElement) {
             var row = $(rowElement);
             var codigoProducto = row.find('td:eq(0)').text();
             var descripcion = row.find('td:eq(1)').text();
@@ -148,76 +132,15 @@
         });
     
     
-        if (etiquetas.length === 0) {
-            alert("No hay etiquetas para imprimir", etiquetas);
-            return;
+        if (etiquetas.length < 2) {
+            alert("No hay etiquetas para imprimir");
+            console.log(etiquetas);
         }
 
         var etiquetasJSON = encodeURIComponent(JSON.stringify(etiquetas));
         
-        var url = 'imprimir/pdf_itera_etiqueta.php?etiquetas=' + etiquetasJSON;
+        var url = 'imprimir/pdf_unitario.php?etiquetas=' + etiquetasJSON;
     
         window.open(url, '_blank', 'location=yes,height=570,width=520,scrollbars=yes,status=yes'); 
     });
     
-
-/*
-// Generar QR y mostrar en modal
-$(document).on('click', '.btnImprimir', function() {
-    var row = $(this).closest('tr');
-    var codigoProducto = row.find('td:eq(0)').text().trim();
-    var cantidad = row.find('td:eq(3)').text().trim();
-    var lote = row.find('td:eq(9)').find('input').val(); 
-    var fecha = row.find('td:eq(8)').text().trim();
-
-    var descripcion = $('#id_embalaje').val().trim();
-    var nPlanilla = $('#nPlanilla').val().trim();
-    var nGuia = $('#nGuia').val().trim();
-    var codigoBultoMaterial = $('#codigo_bulto_material').val().trim();
-    var proveedor = $('#proveedor').find('option:selected').text().trim();
-
-    // Verificar si todos los campos necesarios tienen valores
-    if (!codigoProducto || !cantidad || !lote || !fecha || !descripcion || !nPlanilla || !nGuia || !codigoBultoMaterial || !proveedor) {
-        alert("Todos los campos deben estar llenos antes de generar el PDF.");
-        return;
-    }
-
-    var qrData = {
-        "CodigoProducto": codigoProducto,
-        "Cantidad": cantidad,
-        "Lote": lote,
-        "Fecha": fecha
-    };
-    var qrImageUrl = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(JSON.stringify(qrData))}`;
-
-    var data = {
-        qrUrl: qrImageUrl,
-        titulo: "Materiales Provex",
-        empresa: "PACKING MERQUEN SPA",
-        codProducto: `Cod.Productor: ${codigoProducto}`,
-        descripcion: `Descripción: ${descripcion}`,
-        loteBulto: `Lote/Bulto: ${nPlanilla} - ${nGuia} - ${codigoBultoMaterial}`,
-        proveedor: proveedor,
-        cantidad: `Cantidad: ${cantidad}`,
-        fechaRec: `Fecha: ${fecha}`
-    };
-
-    $.ajax({
-        url: '.../imprimir/pdf_unitario.php', // Ajusta esta ruta según sea necesario
-        type: 'POST',
-        data: data,
-        xhrFields: {
-            responseType: 'blob'
-        },
-        success: function(response) {
-            var blob = new Blob([response], { type: 'application/pdf' });
-            var url = window.URL.createObjectURL(blob);
-            window.open(url); 
-        },
-        error: function(xhr, status, error) {
-            console.error('Error Ajax:', status, error);
-            alert('Hubo un error al generar el PDF. Por favor, intenta de nuevo.');
-        }
-    });
-});
-*/

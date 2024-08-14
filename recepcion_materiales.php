@@ -209,7 +209,6 @@ $hoy = date("Y-m-d");
                             </tr>
                         </thead>
                         <tbody>
-
                         </tbody>
                     </table>
                 </div>

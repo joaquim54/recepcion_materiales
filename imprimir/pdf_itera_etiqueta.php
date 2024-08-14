@@ -60,9 +60,7 @@ class PDF_Label extends FPDF
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $etiquetas = json_decode($_GET['etiquetas'], true);
 
-    if (empty($etiquetas)) {
-        die('No se recibieron etiquetas.');
-    }
+
 
     $pdf = new PDF_Label();
 
@@ -77,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $qrPath = sys_get_temp_dir() . '/qr_' . md5($etiqueta['codigoProducto'] . $etiqueta['loteBulto']) . '.png';
         QRcode::png($qrData, $qrPath, QR_ECLEVEL_L, 10);
 
-        $pdf->AddLabel(
+        $pdf->AddPage(
             $qrPath,
             $etiqueta['familia'],
             $etiqueta['empresa'],
