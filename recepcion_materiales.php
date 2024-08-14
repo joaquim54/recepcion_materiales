@@ -81,6 +81,7 @@ $hoy = date("Y-m-d");
 
         </div>
     </div>
+<!-- Comieza la toma de data de la recepción de materiales -->
 
     <div class="container">
     <div class="collapse" id="mostrar">
@@ -184,10 +185,13 @@ $hoy = date("Y-m-d");
                     </button>
                 </div>
             </div>
+            <!-- termina la toma de data del ingreso de materiales -->
         </div>
     </div>
 </div>
 
+
+<!-- Tabla de materiales ingresados, solo cabeceras valores se crear en base al objeto del Js-->
     <div class="container">
         <div class="collapse" id="mostrar_table">
             <div class="card card-body">
