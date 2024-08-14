@@ -9,7 +9,7 @@ class PDF_Label extends FPDF
         parent::__construct($orientation, $unit, $format);
     }
 
-    function AddLabel($qrPath, $familia, $empresa, $codProducto, $descripcion, $loteBulto, $proveedor, $cantidad, $fechaRec)
+    function AddLabel($qrPath, $familia, $empresa, $codProducto, $descProducto, $loteBulto, $proveedor, $cantidad, $fechaRec)
     {
         $this->AddPage();
 
@@ -33,7 +33,7 @@ class PDF_Label extends FPDF
         // Descripción
         $this->SetFont('Arial', '', 7);
         $this->SetXY(10, 48);
-        $this->MultiCell(80, 4, $descripcion, 0, 'C');
+        $this->MultiCell(80, 4, $descProducto, 0, 'C');
 
         // Lote/Bulto
         $this->SetFont('Arial', '', 8);
@@ -58,29 +58,32 @@ class PDF_Label extends FPDF
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    $etiquetas = json_decode($_GET['etiquetas'], true);
 
+    $etiquetas = json_decode(stripslashes($_GET['etiquetas']), true);
 
+    if (!is_array($etiquetas)) {
+        die('Invalid etiquetas JSON format');
+    }
 
     $pdf = new PDF_Label();
 
     foreach ($etiquetas as $etiqueta) {
         $qrData = json_encode(array(
-            "CodigoProducto" => $etiqueta['codigoProducto'],
+            "codProducto" => $etiqueta['codProducto'],
             "Cantidad" => $etiqueta['cantidad'],
             "Lote" => $etiqueta['loteBulto'],
             "Fecha" => $etiqueta['fechaRec']
         ));
 
-        $qrPath = sys_get_temp_dir() . '/qr_' . md5($etiqueta['codigoProducto'] . $etiqueta['loteBulto']) . '.png';
+        $qrPath = sys_get_temp_dir() . '/qr_' . md5($etiqueta['codProducto'] . $etiqueta['loteBulto']) . '.png';
         QRcode::png($qrData, $qrPath, QR_ECLEVEL_L, 10);
 
-        $pdf->AddPage(
+        $pdf->AddLabel(
             $qrPath,
             $etiqueta['familia'],
             $etiqueta['empresa'],
-            $etiqueta['codigoProducto'],
-            $etiqueta['descripcion'],
+            $etiqueta['codProducto'],
+            $etiqueta['descProducto'],
             $etiqueta['loteBulto'],
             $etiqueta['proveedor'],
             $etiqueta['cantidad'],
@@ -92,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
     }
 
+    // Asegurarse de que no haya salida antes de esta línea
     $pdf->Output('I', 'Etiquetas.pdf');
 }
-
 ?>

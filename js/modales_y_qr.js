@@ -102,45 +102,56 @@
     
 
 //acá imprime todas las etiquetas (para futuras modificaciones siempre modificar el array) 
-    $('#btnImprimirTodo').click(function() {
-        var etiquetas = [];
-        
-        var proveedor = $('#nom_proveedor').val();
-        var fechaRec = $('#fecha').val();
-        var empresa = "PACKING MERQUEN SPA";
-        var familia = $('#zona').val();
-    
-        $('#table-materiales tbody tr').each(function(index, rowElement) {
-            var row = $(rowElement);
-            var codigoProducto = row.find('td:eq(0)').text();
-            var descripcion = row.find('td:eq(1)').text();
-            var cantidad = row.find('td:eq(2)').text();
-            var loteBulto = row.find('td:eq(3)').text();
-    
-            if(codigoProducto && descripcion && cantidad && loteBulto) {
-                etiquetas.push({
-                    codigoProducto: codigoProducto,
-                    descripcion: descripcion,
-                    cantidad: cantidad,
-                    loteBulto: loteBulto,
-                    proveedor: proveedor,
-                    fechaRec: fechaRec,
-                    empresa: empresa,
-                    familia: familia
-                });
-            }
-        });
-    
-    
-        if (etiquetas.length < 2) {
-            alert("No hay etiquetas para imprimir");
-            console.log(etiquetas);
-        }
+$('#btnImprimirTodo').click(function() {
+    var etiquetas = [];
 
-        var etiquetasJSON = encodeURIComponent(JSON.stringify(etiquetas));
-        
-        var url = 'imprimir/pdf_unitario.php?etiquetas=' + etiquetasJSON;
-    
-        window.open(url, '_blank', 'location=yes,height=570,width=520,scrollbars=yes,status=yes'); 
+    // Recorre todas las filas visibles en la tabla
+    $('#mostrar_table tbody tr').each(function(index, rowElement) {
+        var row = $(rowElement);
+
+        // Captura los valores de la fila exactamente como en la función de una etiqueta
+        var codigoProducto = row.find('td:eq(0)').text().trim();
+        var descripcion = row.find('td:eq(1)').text().trim();
+        var cantidad = row.find('td:eq(3)').text().trim();
+        var loteBulto = row.find('td:eq(9)').text().trim();  
+        var fecha = row.find('td:eq(8)').text().trim();
+
+
+        var proveedor = $('#nom_proveedor').val();
+        var empresa = "PACKING MERQUEN SPA";
+        var familia = $('#table-materiales').find('tr').filter(function() {
+            return $(this).find('td:eq(0)').text() === codigoProducto;
+        }).first().find('td:eq(4)').text(); 
+
+        console.log("Procesando Fila " + index + ": Código Producto = " + codigoProducto + ", Descripción = " + descripcion + ", Lote Bulto = " + loteBulto);
+
+        // Generar la URL del QR como en la función de una etiqueta
+        var qrData = {"CodigoProducto": codigoProducto, "Cantidad": cantidad, "Lote": loteBulto, "Fecha": fecha};
+        var qrImageUrl = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(JSON.stringify(qrData))}`;
+
+        if(codigoProducto && descripcion && loteBulto) {
+            etiquetas.push({
+                qrimg: qrImageUrl,
+                familia: familia,
+                empresa: empresa,
+                codProducto: codigoProducto,
+                descProducto: descripcion,
+                loteBulto: loteBulto,
+                proveedor: proveedor,
+                cantidad: cantidad,
+                fechaRec: fecha
+            });
+        }
     });
-    
+
+
+
+
+    // Crear la URL para enviar las etiquetas a imprimir, como se hace en la función de una etiqueta
+    var etiquetasJSON = encodeURIComponent(JSON.stringify(etiquetas));
+    var url = 'imprimir/pdf_itera_etiqueta.php?etiquetas=' + etiquetasJSON;
+
+    console.log("URL para la impresión:", url); 
+
+    window.open(url, '_blank', 'location=yes,height=570,width=520,scrollbars=yes,status=yes'); 
+});
