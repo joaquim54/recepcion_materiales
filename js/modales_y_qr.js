@@ -113,7 +113,9 @@ $('#btnImprimirTodo').click(function() {
         var codigoProducto = row.find('td:eq(0)').text().trim();
         var descripcion = row.find('td:eq(1)').text().trim();
         var cantidad = row.find('td:eq(3)').text().trim();
-        var loteBulto = row.find('td:eq(9)').text().trim();  
+        var nPlanilla = $('#nPlanilla').val().trim();
+        var nGuia = $('#nGuia').val().trim();
+        var loteBulto = nPlanilla + " - " + nGuia + " - " + row.find('td:eq(9)').text().trim();
         var fecha = row.find('td:eq(8)').text().trim();
 
 
