@@ -5,8 +5,9 @@ body {
 }
 
 .container {
+    margin-top: 30px;
     max-width: 1200px;
-    margin: auto;
+
     background-color: #fff;
     padding: 20px;
     border-radius: 10px;
@@ -51,3 +52,26 @@ input, select, textarea {
     align-items: center;
     width: 100%;
 }
+
+@media (max-width: 768px) {
+    .modal-dialog {
+        max-width: 90%; 
+        margin: 10px auto;
+    }
+    .modal-content {
+        padding: 10px;
+    }
+    .modal-header, .modal-footer {
+        padding: 10px; 
+    }
+    .modal-title {
+        font-size: 18px;
+    }
+    .table {
+        font-size: 14px;
+    }
+    .btn {
+        font-size: 14px;
+    }
+}
+

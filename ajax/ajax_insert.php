@@ -11,8 +11,6 @@ $bodegaOrigen = isset($_POST['bodegaOrigen']) ? $_POST['bodegaOrigen'] : '';
 $bodegaDestino = isset($_POST['bodegaDestino']) ? $_POST['bodegaDestino'] : '';
 $proveedor = isset($_POST['proveedor']) ? $_POST['proveedor'] : '';
 $nGuia = isset($_POST['nGuia']) ? $_POST['nGuia'] : '';
-$guiaObjeta = isset($_POST['guiaObjeta']) ? $_POST['guiaObjeta'] : '';
-$observacion = isset($_POST['observacion']) ? $_POST['observacion'] : '';
 $code_material = isset($_POST['code_material']) ? $_POST['code_material'] : '';
 $id_embalaje = isset($_POST['id_embalaje']) ? $_POST['id_embalaje'] : '';
 $codigo_bulto_material = isset($_POST['codigo_bulto_material']) ? $_POST['codigo_bulto_material'] : '';
@@ -31,36 +29,26 @@ $row_check_titulo = odbc_fetch_array($result_check_titulo);
 
 if ($row_check_titulo['count'] == 0) {
     // Insertar en TIT_RECEPCIONMATERIALES (solo si no existe)
-    $sql_titulo = "INSERT INTO Bodega.dbo.TIT_RECEPCIONMATERIALES
+    $sql_titulo = "INSERT INTO Erpfrusys.dbo.TIT_RECEPCIONMATERIALES
     (COD_EMP, COD_TEM, ZON, PLANILLA_REC, COD_BOD, COD_MOV, CODIGOCLIENTE,
-    FECHA_RECEPCION, NRO_GUIA, COD_BOD_ORIGEN, GUIA_OBJETADA, OBSERVACION) 
+    FECHA_RECEPCION, NRO_GUIA, COD_BOD_ORIGEN) 
     VALUES 
     ('$cod_emp', '$cod_tem', '$zona', '$nplanilla', '$bodegaDestino', '$tipo', '$proveedor',
-    CONVERT(smalldatetime, '$fecha', 120), '$nGuia', '$bodegaOrigen', '$guiaObjeta', '$observacion');";
+    CONVERT(smalldatetime, '$fecha', 120), '$nGuia', '$bodegaOrigen');";
 
     $result_titulo = odbc_exec($conn, $sql_titulo);
 
-    if (!$result_titulo) {
-        echo "Error al insertar el registro del título: " . odbc_errormsg($conn);
-        exit;
-    }
 }
 
 // Insertar en RECEPCIONMATERIALES (siempre)
-$sql_cuerpo = "INSERT INTO Bodega.dbo.RECEPCIONMATERIALES
+$sql_cuerpo = "INSERT INTO Erpfrusys.dbo.RECEPCIONMATERIALES
 (COD_EMP, COD_TEM, ZON, PLANILLA_REC, CORRELATIVO, SUBITEM, CAN_REC,
 ID_ORDEN, FECHA_VENC, id_lote_venc) 
 VALUES 
 ('$cod_emp', '$cod_tem', '$zona', '$nplanilla', '$correlativo', '$code_material', '$cant_rec',
 '', '$fechaVencimiento', '$codigo_bulto_material');";
 
-echo $sql_cuerpo;
-
 $result_cuerpo = odbc_exec($conn, $sql_cuerpo);
 
-if ($result_cuerpo) {
-    echo "El registro se ha insertado correctamente";
-} else {
-    echo "Error al insertar el registro del cuerpo: " . odbc_errormsg($conn);
-}
+
 ?>

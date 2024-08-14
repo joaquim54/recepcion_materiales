@@ -167,8 +167,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         bodegaDestino: document.getElementById('bodegaDestino').value,
                         proveedor: document.getElementById('proveedor').value,
                         nGuia: document.getElementById('nGuia').value,
-                        guiaObjeta: document.getElementById('guiaObjetada').checked ? 1 : 0,
-                        observacion: document.getElementById('observacion').value,
                         code_material: document.getElementById('code_material').value,
                         id_embalaje: document.getElementById('id_embalaje').value,
                         codigo_bulto_material: codigoBultoMaterial,
@@ -191,12 +189,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         type: 'POST',
                         data: bultoData,
                         success: function(response) {
-                            console.log('Bulto insertado:', response);
+                            //console.log('Bulto insertado:', response); en caso de no funcionar depurar con este console log para ver si se esta insertando el bulto o  cual error arroja sql server
                             bultosAgregados++;
     
                             // Actualizar la tabla del front después de insertar cada bulto
                             var row = document.createElement('tr');
-    
                             var codigoCell = document.createElement('td');
                             var descripcionCell = document.createElement('td');
                             var unidadCell = document.createElement('td');
@@ -307,6 +304,34 @@ document.addEventListener('DOMContentLoaded', function() {
     
 });
 
+
+//manejo del modal de los proveedores
+$(document).ready(function() {
+    $('#modal-tipo-proveedor').on('shown.bs.modal', function () {
+        if (!$.fn.DataTable.isDataTable('#table-proveedores')) {
+            $('#table-proveedores').DataTable({
+                "paging": true,
+                "searching": true,
+                "language": {
+                    "url": "lib/DataTables/es_es.json" // URL para la localización en español
+                }
+            });
+        }
+    });
+
+    // Manejar la selección del proveedor
+    $(document).on('click', '.seleccionar-proveedor', function() {
+        var CodigoCliente = $(this).data('codigo');
+        var NombreCliente = $(this).data('nombre');
+
+        $('#proveedor').val(CodigoCliente);
+        $('#nom_proveedor').val(NombreCliente);
+
+        $('#modal-tipo-proveedor').modal('hide'); // Oculta el modal después de seleccionar el proveedor
+    });
+});
+
+
 // Inicializa el modal y la tabla de materiales cuando el modal se muestra
 $(document).ready(function() {
     $('#modal-tipo-material').on('shown.bs.modal', function () {
@@ -315,7 +340,7 @@ $(document).ready(function() {
                 "paging": true,
                 "searching": true,
                 "language": {
-                    "url": "//cdn.datatables.net/plug-ins/1.11.3/i18n/es_es.json" // URL para la localización en español
+                    "url": "lib/DataTables/es_es.json" // URL para la localización en español
                 }
             });
         }
@@ -376,23 +401,7 @@ document.addEventListener('DOMContentLoaded', function() {
     unidadBultos.addEventListener('input', calcularCantidadRecibida);
 });
 
-document.addEventListener('DOMContentLoaded', function() {
-    var guiaObjetada = document.getElementById('guiaObjetada');
-    var observacion = document.getElementById('observacion');
 
-    function toggleObservacion() {
-        if (guiaObjetada.checked) {
-            observacion.removeAttribute('disabled');
-        } else {
-            observacion.setAttribute('disabled', 'disabled');
-        }
-    }
-
-    guiaObjetada.addEventListener('change', toggleObservacion);
-
-    // Inicializa el estado del campo de observación
-    toggleObservacion();
-});
 
 document.addEventListener('DOMContentLoaded', function() {
     // Referencias a los elementos del DOM
@@ -422,12 +431,29 @@ $(document).on('click', '.btnImprimir', function() {
     var row = $(this).closest('tr');
     var codigoProducto = row.find('td:eq(0)').text();
     var cantidad = row.find('td:eq(3)').text();
-    var lote = row.find('td:eq(9)').text();
+    var lote = row.find('td:eq(9)').find('input').val(); // Asumiendo que es un input
     var fecha = row.find('td:eq(8)').text();
 
+    // Obtén los valores correctos de los elementos HTML
+    var descripcion = $('#id_embalaje').val(); // Usando val() para inputs
+    var nPlanilla = $('#nPlanilla').val();
+    var nGuia = $('#nGuia').val();
+    var codigoBultoMaterial = $('#codigo_bulto_material').val();
+    var proveedor = $('#proveedor').find('option:selected').text(); // Usando find() para selects
+
     var qrData = {"CodigoProducto": codigoProducto, "Cantidad": cantidad, "Lote": lote, "Fecha": fecha};
-    var qrImageUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(JSON.stringify(qrData))}`;
+    var qrImageUrl = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(JSON.stringify(qrData))}`;
 
     $('#qrImage').attr('src', qrImageUrl);
+    $('#modal-titulo').text(`${familia}`);
+    $('#modal-empresa').text(`PACKIG MERQUEN SPA`);
+    $('#modal-codProducto').text(`Cod.Productor: ${codigoProducto}`);
+    $('#modal-descProducto').text(`Descripción: ${descripcion}`);
+    $('#modal-lote-bulto').text(`Lote/Bulto: ${nPlanilla} - ${nGuia} - ${codigoBultoMaterial}`);
+    $('#modal-proveedor').text(`${proveedor}`);
+    $('#modal-cantidad').text(`Cant: ${cantidad}`);
+    $('#modal-fechaRec').text(`Fecha: ${fecha}`);
+
     $('#qrModal').modal('show');
 });
+
