@@ -26,32 +26,32 @@ class PDF_Label extends FPDF
         $this->Cell(80, 5, $empresa, 0, 1, 'C');
 
         // Código del Producto
-        $this->SetFont('Arial', '', 8);
+        $this->SetFont('Arial', '', 10);
         $this->SetXY(10, 43);
         $this->Cell(80, 5, "Cod. Producto: " . $codProducto, 0, 1, 'C');
 
         // Descripción
-        $this->SetFont('Arial', '', 7);
+        $this->SetFont('Arial', '', 10);
         $this->SetXY(10, 48);
         $this->MultiCell(80, 4, $descProducto, 0, 'C');
 
         // Lote/Bulto
-        $this->SetFont('Arial', '', 8);
+        $this->SetFont('Arial', '', 10);
         $this->SetXY(10, 57);
         $this->Cell(80, 5, " " . $loteBulto, 0, 1, 'C');
 
         // Proveedor
-        $this->SetFont('Arial', '', 8);
+        $this->SetFont('Arial', '', 10);
         $this->SetXY(10, 62);
         $this->Cell(80, 5, $proveedor, 0, 1, 'C');
 
         // Cantidad
-        $this->SetFont('Arial', '', 8);
+        $this->SetFont('Arial', '', 10);
         $this->SetXY(10, 67);
-        $this->Cell(80, 5, "" . $cantidad, 0, 1, 'C');
+        $this->Cell(80, 5, "Cant." . $cantidad, 0, 1, 'C');
 
         // Fecha de Recepción
-        $this->SetFont('Arial', '', 8);
+        $this->SetFont('Arial', '', 10);
         $this->SetXY(10, 72);  
         $this->Cell(80, 5, "" . $fechaRec, 0, 1, 'C');
     }
@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $qrData = json_encode(array(
             "codProducto" => $etiqueta['codProducto'],
             "Cantidad" => $etiqueta['cantidad'],
-            "Lote" => $etiqueta['loteBulto'],
+            "Lote" => $etiqueta['loteqr'],
             "Fecha" => $etiqueta['fechaRec']
         ));
 

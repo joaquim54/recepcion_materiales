@@ -54,7 +54,8 @@ if (isset($_POST['nPlanilla'])) {
 
             $sql_tipos = "SELECT tm.COD_MOV, CONCAT(tm.COD_MOV, ' ', tm.DES_MOV) as des_movimiento 
                         FROM erpfrusys.dbo.TIP_MOV tm
-                        WHERE tm.DES_MOV <> ''";
+                        WHERE tm.COD_TEM = 7
+                        and tm.cod_mov in('001', '100');";
             $result_tipos = odbc_exec($conn, $sql_tipos);
             if ($result_tipos) {
                 while ($row = odbc_fetch_array($result_tipos)) {

@@ -26,6 +26,7 @@ $hoy = date("Y-m-d");
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- sweet alert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
 </head>
 
 <body>
@@ -52,14 +53,14 @@ $hoy = date("Y-m-d");
                     $row = odbc_fetch_array($result);
                     $planilla_tit_rm = $row['planilla_tit_rm'];
                     ?>
-                    <input type="text" id="nPlanilla" name="nPlanilla" class="form-control" value="<?php echo htmlspecialchars($planilla_tit_rm); ?>" pattern="[0-9]+">
+                    <input type="text" id="nPlanilla" name="nPlanilla" class="form-control" value="<?php echo htmlspecialchars($planilla_tit_rm); ?>" pattern="[0-9]+" readonly>
                 </div>
             </div>
 
             <div class="flex-container">
                 <div class="section">
                     <label for="tipo">Tipo:</label>
-                    <select id="tipo" name="tipo" class="form-control" disabled>
+                    <select id="tipo" name="tipo" class="form-control">
                         <option value="" disabled selected>Seleccione</option>
                     </select>
                 </div>
@@ -69,7 +70,7 @@ $hoy = date("Y-m-d");
                 </div>
             </div>
             <div class="text-center d-flex justify-content-center">
-                <button class="btn btn-primary mr-2" id="btnBusquedaOrden" role="button" disabled>
+                <button class="btn btn-primary mr-2" id="btnBusquedaOrden" role="button">
                     <i class="fa-solid fa-magnifying-glass-plus"></i>
                     B&uacute;squeda de planilla
                 </button>
@@ -296,7 +297,7 @@ $hoy = date("Y-m-d");
                 </div>
                 <div class="modal-body">
                     <?php
-                    $sql = "SELECT s.SUBITEM, s.DES_SITEM, s.COD_UNID, '1,000000' AS valor, a.DESCRIPCION as 'familia' FROM Erpfrusys.dbo.SUBITEM s LEFT JOIN Erpfrusys.dbo.AGRUPACION a ON s.COD_AGRUP = a.COD_AGRUP where s.COD_TEM = " . $cod_tem;
+                    $sql = "SELECT distinct s.SUBITEM, s.DES_SITEM, s.COD_UNID, '1,000000' AS valor, a.DESCRIPCION as 'familia' FROM Erpfrusys.dbo.SUBITEM s LEFT JOIN Erpfrusys.dbo.AGRUPACION a ON s.COD_AGRUP = a.COD_AGRUP where s.COD_TEM = " . $cod_tem;
                     $result = odbc_exec($conn, $sql);
                     ?>
                     <div class="table-responsive">

@@ -9,7 +9,8 @@ document.addEventListener('DOMContentLoaded', function() {
     var nGuia = document.getElementById('nGuia');
     var btnAgregarMaterial = document.getElementById('btnAgregarMaterial');
 
-    function toggleBusquedaButton() {
+    
+/* function toggleBusquedaButton() {
         var planillaValue = nPlanilla.value.trim();
         if (planillaValue !== "") {
             tipo.removeAttribute('disabled');
@@ -35,5 +36,5 @@ document.addEventListener('DOMContentLoaded', function() {
             toggleBusquedaButton();
         }
     }
-    );
+    );*/
 });

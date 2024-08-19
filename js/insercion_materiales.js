@@ -44,9 +44,8 @@ async function agregarMateriales() {
                     type: 'POST',
                     data: bultoData,
                     success: function(response) {
+                        console.log('Respuesta del servidor:', response);
                         bultosAgregados++;
-                        //console.log('Bulto insertado:', response);
-                        
                         // Actualizar la tabla del front después de insertar cada bulto
                         var row = document.createElement('tr');
                         var codigoCell = document.createElement('td');

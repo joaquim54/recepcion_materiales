@@ -1,5 +1,4 @@
 <?php
-session_start();
 include '../con_sql_prueba.php';
 
 // Recibir los datos enviados por la solicitud AJAX
@@ -21,6 +20,17 @@ $cant_rec = isset($_POST['cant_rec']) ? $_POST['cant_rec'] : '';
 $correlativo = isset($_POST['correlativo']) ? $_POST['correlativo'] : '';
 $codigo_bulto_material = isset($_POST['id_bulto_material']) ? $_POST['id_bulto_material'] : '';
 
+// última aseguración en caso de que dos personas esten usando la web al mismo tiempo 
+$sql_max_planilla = "SELECT MAX(PLANILLA_REC) AS max_planilla FROM Bodega.dbo.TIT_RECEPCIONMATERIALES WHERE COD_TEM = '$cod_tem'";
+$result_max_planilla = odbc_exec($conn, $sql_max_planilla);
+$row_max_planilla = odbc_fetch_array($result_max_planilla);
+$max_planilla = $row_max_planilla['max_planilla'];
+
+if ($nplanilla <= $max_planilla) {
+    $nplanilla = $max_planilla + 1;
+}
+
+
 
 // Verificar si ya existe un registro en TIT_RECEPCIONMATERIALES para la planilla específica
 $sql_check_titulo = "SELECT COUNT(*) AS count FROM Bodega.dbo.TIT_RECEPCIONMATERIALES WHERE PLANILLA_REC = '$nplanilla'";
@@ -38,6 +48,7 @@ if ($row_check_titulo['count'] == 0) {
 
     $result_titulo = odbc_exec($conn, $sql_titulo);
 
+
 }
 
 // Insertar en RECEPCIONMATERIALES (siempre)
@@ -50,5 +61,12 @@ VALUES
 
 $result_cuerpo = odbc_exec($conn, $sql_cuerpo);
 
+
+if($result_titulo && $result_cuerpo){
+    echo "correctamente";
+}else{
+    echo "mal" .odbc_errormsg($conn);
+    echo $sql_titulo;
+}
 
 ?>

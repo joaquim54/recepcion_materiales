@@ -26,32 +26,32 @@ class PDF_Label extends FPDF
         $this->Cell(80, 5, $empresa, 0, 1, 'C');
 
         // Código del Producto
-        $this->SetFont('Arial', '', 8);
+        $this->SetFont('Arial', '', 10);
         $this->SetXY(10, 43);
         $this->Cell(80, 5, "Cod. Producto: " . $codProducto, 0, 1, 'C');
 
         // Descripción
-        $this->SetFont('Arial', '', 7);
+        $this->SetFont('Arial', '', 10);
         $this->SetXY(10, 48);
-        $this->MultiCell(80, 4, $descripcion, 0, 'C');
+        $this->MultiCell(80, 5, $descripcion, 0, 'C');
 
         // Lote/Bulto
-        $this->SetFont('Arial', '', 8);
+        $this->SetFont('Arial', '', 10);
         $this->SetXY(10, 57);
         $this->Cell(80, 5, " " . $loteBulto, 0, 1, 'C');
 
         // Proveedor
-        $this->SetFont('Arial', '', 8);
+        $this->SetFont('Arial', '', 10);
         $this->SetXY(10, 62);
         $this->Cell(80, 5, $proveedor, 0, 1, 'C');
 
         // Cantidad
-        $this->SetFont('Arial', '', 8);
+        $this->SetFont('Arial', '', 10);
         $this->SetXY(10, 67);
-        $this->Cell(80, 5, "" . $cantidad, 0, 1, 'C');
+        $this->Cell(80, 5, "Cant:" . $cantidad, 0, 1, 'C');
 
         // Fecha de Recepción
-        $this->SetFont('Arial', '', 8);
+        $this->SetFont('Arial', '', 10);
         $this->SetXY(10, 72);  
         $this->Cell(80, 5, "" . $fechaRec, 0, 1, 'C');
     }
@@ -63,7 +63,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $empresa = $_GET['empresa'];
     $codProducto = $_GET['codProducto'];
     $descripcion = $_GET['descProducto'];
+    $lote = $_GET['lote'];
     $loteBulto = $_GET['loteBulto'];
+    $lote = $_GET['lote'];
     $proveedor = $_GET['proveedor'];
     $cantidad = $_GET['cantidad'];
     $fechaRec = $_GET['fechaRec'];
@@ -72,11 +74,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $qrData = json_encode(array(
         "CodigoProducto" => $codProducto,
         "Cantidad" => $cantidad,
-        "Lote" => $loteBulto,
+        "Lote" => $lote,
         "Fecha" => $fechaRec
     ));
 
-    $qrPath = sys_get_temp_dir() . '/qr_' . md5($codProducto . $loteBulto) . '.png';
+    $qrPath = sys_get_temp_dir() . '/qr_' . md5($codProducto . $loteqr) . '.png';
     QRcode::png($qrData, $qrPath, QR_ECLEVEL_L, 10);
 
     $pdf = new PDF_Label();

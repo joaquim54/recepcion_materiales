@@ -56,6 +56,9 @@
         var cantidad = row.find('td:eq(3)').text();
         var lote = row.find('td:eq(9)').text(); 
         var fecha = row.find('td:eq(8)').text();
+        //importate para mostrar fecha correcta en la etiqueta y en el qr
+        var formatfecha = fecha.split('-');
+        var fechaformateada = formatfecha[2] + '-' + formatfecha[1] + '-' + formatfecha[0];
         var familia = $('#table-materiales').find('tr').filter(function() {
             return $(this).find('td:eq(0)').text() === codigoProducto;
         }).first().find('td:eq(4)').text(); 
@@ -67,7 +70,7 @@
         var nPlanilla = $('#nPlanilla').val();
         var nGuia = $('#nGuia').val();
 
-        var qrData = {"CodigoProducto": codigoProducto, "Cantidad": cantidad, "Lote": lote, "Fecha": fecha};
+        var qrData = {"CodigoProducto": codigoProducto, "Cantidad": cantidad, "Lote": lote, "Fecha": fechaformateada};
         var qrImageUrl = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(JSON.stringify(qrData))}`;
 
         $('#qrImage').attr('src', qrImageUrl);
@@ -75,27 +78,31 @@
         $('#modal-empresa').text(`PACKING MERQUEN SPA`);
         $('#modal-codProducto').text(`Cod.Productor: ${codigoProducto}`);
         $('#modal-descProducto').text(`${descripcionProducto}`);
-        $('#modal-lote-bulto').text(`Lote/Bulto: ${nPlanilla} - ${nGuia} - ${lote}`);
+        $('#modal-lote-bulto').text(`Lote/Bulto: ${nPlanilla} - ${nGuia} - ${lote}`); //traerme solo lote
         $('#modal-proveedor').text(`${proveedor}`);
         $('#modal-cantidad').text(`Cant: ${cantidad}`);
-        $('#modal-fechaRec').text(`Fecha: ${fecha}`);
+        $('#modal-fechaRec').text(`Fecha: ${fechaformateada}`);
+
+        //lote para qr
+
+        $('#qrModal').data('lote', lote);
 
         $('#qrModal').modal('show');
     });
 
 //esta función imprime de manera unitaria, la etiqueta
     function imprime() {
-        var qrImageUrl = $('#qrImage').attr('src');  
         var familia = document.getElementById('modal-familia').innerText.trim();
         var empresa = document.getElementById('modal-empresa').innerText.trim();
         var codProducto = document.getElementById('modal-codProducto').innerText.replace('Cod.Productor: ', '').trim();
         var descProducto = document.getElementById('modal-descProducto').innerText.trim();
+        var loteqr = $('#qrModal').data('lote');
         var loteBulto = document.getElementById('modal-lote-bulto').innerText.replace('Lote/Bulto: ', '').trim();
         var proveedor = document.getElementById('modal-proveedor').innerText.trim();
         var cantidad = document.getElementById('modal-cantidad').innerText.replace('Cant: ', '').trim();
         var fechaRec = document.getElementById('modal-fechaRec').innerText.replace('Fecha: ', '').trim();
         
-        var url = `imprimir/pdf_unitario.php?qrimg=${encodeURIComponent(qrImageUrl)}&familia=${encodeURIComponent(familia)}&empresa=${encodeURIComponent(empresa)}&codProducto=${encodeURIComponent(codProducto)}&descProducto=${encodeURIComponent(descProducto)}&loteBulto=${encodeURIComponent(loteBulto)}&proveedor=${encodeURIComponent(proveedor)}&cantidad=${encodeURIComponent(cantidad)}&fechaRec=${encodeURIComponent(fechaRec)}`;
+        var url = `imprimir/pdf_unitario.php?lote=${encodeURIComponent(loteqr)}&familia=${encodeURIComponent(familia)}&empresa=${encodeURIComponent(empresa)}&codProducto=${encodeURIComponent(codProducto)}&descProducto=${encodeURIComponent(descProducto)}&loteBulto=${encodeURIComponent(loteBulto)}&proveedor=${encodeURIComponent(proveedor)}&cantidad=${encodeURIComponent(cantidad)}&fechaRec=${encodeURIComponent(fechaRec)}`;
         
         window.open(url, '_blank', 'location=yes,height=570,width=520,scrollbars=yes,status=yes'); 
     }
@@ -115,8 +122,12 @@ $('#btnImprimirTodo').click(function() {
         var cantidad = row.find('td:eq(3)').text().trim();
         var nPlanilla = $('#nPlanilla').val().trim();
         var nGuia = $('#nGuia').val().trim();
+        var loteqr = row.find('td:eq(9)').text().trim();
         var loteBulto = nPlanilla + " - " + nGuia + " - " + row.find('td:eq(9)').text().trim();
+        //importate para mostrar fecha correcta en la etiqueta y en el qr
         var fecha = row.find('td:eq(8)').text().trim();
+        var fechaSplit = fecha.split('-');
+        var fechaFormateada = fechaSplit[2] + '-' + fechaSplit[1] + '-' + fechaSplit[0];
 
 
         var proveedor = $('#nom_proveedor').val();
@@ -125,23 +136,18 @@ $('#btnImprimirTodo').click(function() {
             return $(this).find('td:eq(0)').text() === codigoProducto;
         }).first().find('td:eq(4)').text(); 
 
-        console.log("Procesando Fila " + index + ": Código Producto = " + codigoProducto + ", Descripción = " + descripcion + ", Lote Bulto = " + loteBulto);
-
-        // Generar la URL del QR como en la función de una etiqueta
-        var qrData = {"CodigoProducto": codigoProducto, "Cantidad": cantidad, "Lote": loteBulto, "Fecha": fecha};
-        var qrImageUrl = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(JSON.stringify(qrData))}`;
 
         if(codigoProducto && descripcion && loteBulto) {
             etiquetas.push({
-                qrimg: qrImageUrl,
                 familia: familia,
                 empresa: empresa,
                 codProducto: codigoProducto,
                 descProducto: descripcion,
+                loteqr: loteqr,
                 loteBulto: loteBulto,
                 proveedor: proveedor,
                 cantidad: cantidad,
-                fechaRec: fecha
+                fechaRec: fechaFormateada
             });
         }
     });
@@ -152,8 +158,6 @@ $('#btnImprimirTodo').click(function() {
     // Crear la URL para enviar las etiquetas a imprimir, como se hace en la función de una etiqueta
     var etiquetasJSON = encodeURIComponent(JSON.stringify(etiquetas));
     var url = 'imprimir/pdf_itera_etiqueta.php?etiquetas=' + etiquetasJSON;
-
-    console.log("URL para la impresión:", url); 
 
     window.open(url, '_blank', 'location=yes,height=570,width=520,scrollbars=yes,status=yes'); 
 });
