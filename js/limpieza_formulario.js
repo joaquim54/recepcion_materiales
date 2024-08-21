@@ -16,4 +16,24 @@ document.addEventListener('DOMContentLoaded', function() {
         $('#mostrar').collapse('hide');
         $('#mostrar_table').collapse('hide');
     });
-});
+    
+    btnNuevaPlanilla.addEventListener('click', function() {
+            Swal.fire({
+                title: "¿Estas seguro?",
+                text: "Al presionar este botón cambiará de planilla",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Aceptar"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    location.reload();
+                }
+            });
+        });
+    });
+
+
+
+

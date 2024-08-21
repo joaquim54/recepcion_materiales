@@ -17,8 +17,14 @@ function habilitarAgregarMateriales() {
         document.getElementById('btnAgregarMaterial').removeAttribute('disabled');
     } else {
         document.getElementById('btnAgregarMaterial').setAttribute('disabled', 'disabled');
-        document.getElementById('btnImprimirTodo').setAttribute('disabled', 'disabled'); // Deshabilitar Imprimir si los campos no están completos
+        document.getElementById('btnImprimirTodo').setAttribute('disabled', 'disabled');// Deshabilitar Imprimir si los campos no están completos
     }
+}
+
+if (document.getElementById('btnAgregarMaterial')) {
+    document.getElementById('btnAgregarMaterial').addEventListener('click', function() {
+        document.getElementById('btnNuevaPlanilla').removeAttribute('disabled');
+    });
 }
 
 document.getElementById('btnAgregarMaterial').addEventListener('click', function() {

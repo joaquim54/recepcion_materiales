@@ -1,4 +1,3 @@
-
 var materialesSeleccionados = [];
 
 // Manejo del modal de los proveedores
@@ -134,7 +133,7 @@ $('#btnImprimirTodo').click(function() {
             var nPlanilla = $('#nPlanilla').val().trim();
             var nGuia = $('#nGuia').val().trim();
             var loteqr = row.find('td:eq(9)').text().trim();
-            var loteBulto = nPlanilla + " - " + nGuia + " - " + row.find('td:eq(9)').text().trim();
+            var loteBulto = nPlanilla + " - " + nGuia + " - " + loteqr;
             var fecha = row.find('td:eq(8)').text().trim();
             var fechaSplit = fecha.split('-');
             var fechaFormateada = fechaSplit[2] + '-' + fechaSplit[1] + '-' + fechaSplit[0];
@@ -158,9 +157,21 @@ $('#btnImprimirTodo').click(function() {
         }
     });
 
-    // Crear la URL para enviar las etiquetas a imprimir
-    var etiquetasJSON = encodeURIComponent(JSON.stringify(etiquetas));
-    var url = 'imprimir/pdf_itera_etiqueta.php?etiquetas=' + etiquetasJSON;
+    // Abrir una nueva ventana emergente
+    var popup = window.open('', 'popup', 'location=yes,height=570,width=520,scrollbars=yes,status=yes');
 
-    window.open(url, '_blank', 'location=yes,height=570,width=520,scrollbars=yes,status=yes'); 
+    // Crear un formulario dinámico
+    let formularioPost = $('<form>', {
+        'method': 'POST',
+        'action': 'imprimir/pdf_itera_etiqueta.php',
+        'target': 'popup' 
+    }).append($('<input>', {
+        'type': 'hidden',
+        'name': 'etiquetas',
+        'value': JSON.stringify(etiquetas)
+    }));
+
+    // Agregar el formulario al body de la página principal y enviarlo
+    $('body').append(formularioPost);
+    formularioPost.submit().remove();
 });

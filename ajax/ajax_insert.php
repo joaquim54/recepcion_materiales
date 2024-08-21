@@ -20,6 +20,7 @@ $cant_rec = isset($_POST['cant_rec']) ? $_POST['cant_rec'] : '';
 $correlativo = isset($_POST['correlativo']) ? $_POST['correlativo'] : '';
 $codigo_bulto_material = isset($_POST['id_bulto_material']) ? $_POST['id_bulto_material'] : '';
 
+
 /*// última aseguración en caso de que dos personas esten usando la web al mismo tiempo 
 $sql_max_planilla = "SELECT MAX(PLANILLA_REC) AS max_planilla FROM Bodega.dbo.TIT_RECEPCIONMATERIALES WHERE COD_TEM = '$cod_tem'";
 $result_max_planilla = odbc_exec($conn, $sql_max_planilla);
@@ -58,7 +59,7 @@ VALORCOMPRA, VALORVENTA,
 FECHA_VENC, id_lote_venc, MONEDA) 
 VALUES 
 ('$cod_emp', '$cod_tem', '$zona', '$nplanilla', '$correlativo', '$code_material', '$cant_rec',
-'0','0', '$fechaVencimiento', '$codigo_bulto_material', '1');";
+'0','0', convert(smalldatetime,'$fechaVencimiento',120), '$codigo_bulto_material', '1');";
 
 $result_cuerpo = odbc_exec($conn, $sql_cuerpo);
 
@@ -67,7 +68,7 @@ if($result_titulo && $result_cuerpo){
     echo "correctamente";
 }else{
     echo "mal" .odbc_errormsg($conn);
-    echo $sql_titulo;
+    echo $sql_cuerpo;
 }
 
 ?>

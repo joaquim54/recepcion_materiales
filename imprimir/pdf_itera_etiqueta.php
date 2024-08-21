@@ -57,9 +57,9 @@ class PDF_Label extends FPDF
     }
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-    $etiquetas = json_decode(stripslashes($_GET['etiquetas']), true);
+    $etiquetas = json_decode(stripslashes($_POST['etiquetas']), true);
 
     if (!is_array($etiquetas)) {
         die('Invalid etiquetas JSON format');
