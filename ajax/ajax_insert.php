@@ -20,7 +20,7 @@ $cant_rec = isset($_POST['cant_rec']) ? $_POST['cant_rec'] : '';
 $correlativo = isset($_POST['correlativo']) ? $_POST['correlativo'] : '';
 $codigo_bulto_material = isset($_POST['id_bulto_material']) ? $_POST['id_bulto_material'] : '';
 
-// última aseguración en caso de que dos personas esten usando la web al mismo tiempo 
+/*// última aseguración en caso de que dos personas esten usando la web al mismo tiempo 
 $sql_max_planilla = "SELECT MAX(PLANILLA_REC) AS max_planilla FROM Bodega.dbo.TIT_RECEPCIONMATERIALES WHERE COD_TEM = '$cod_tem'";
 $result_max_planilla = odbc_exec($conn, $sql_max_planilla);
 $row_max_planilla = odbc_fetch_array($result_max_planilla);
@@ -28,7 +28,7 @@ $max_planilla = $row_max_planilla['max_planilla'];
 
 if ($nplanilla <= $max_planilla) {
     $nplanilla = $max_planilla + 1;
-}
+}*/
 
 
 
@@ -41,10 +41,10 @@ if ($row_check_titulo['count'] == 0) {
     // Insertar en TIT_RECEPCIONMATERIALES (solo si no existe)
     $sql_titulo = "INSERT INTO Erpfrusys.dbo.TIT_RECEPCIONMATERIALES
     (COD_EMP, COD_TEM, ZON, PLANILLA_REC, COD_BOD, COD_MOV, CODIGOCLIENTE,
-    FECHA_RECEPCION, NRO_GUIA, COD_BOD_ORIGEN) 
+    FECHA_RECEPCION, NRO_GUIA, COD_BOD_ORIGEN, VALOR_FLETE) 
     VALUES 
     ('$cod_emp', '$cod_tem', '$zona', '$nplanilla', '$bodegaDestino', '$tipo', '$proveedor',
-    CONVERT(smalldatetime, '$fecha', 120), '$nGuia', '$bodegaOrigen');";
+    CONVERT(smalldatetime, '$fecha', 120), '$nGuia', '$bodegaOrigen','0');";
 
     $result_titulo = odbc_exec($conn, $sql_titulo);
 
@@ -54,10 +54,11 @@ if ($row_check_titulo['count'] == 0) {
 // Insertar en RECEPCIONMATERIALES (siempre)
 $sql_cuerpo = "INSERT INTO Erpfrusys.dbo.RECEPCIONMATERIALES
 (COD_EMP, COD_TEM, ZON, PLANILLA_REC, CORRELATIVO, SUBITEM, CAN_REC,
-ID_ORDEN, FECHA_VENC, id_lote_venc) 
+VALORCOMPRA, VALORVENTA,
+FECHA_VENC, id_lote_venc, MONEDA) 
 VALUES 
 ('$cod_emp', '$cod_tem', '$zona', '$nplanilla', '$correlativo', '$code_material', '$cant_rec',
-'', '$fechaVencimiento', '$codigo_bulto_material');";
+'0','0', '$fechaVencimiento', '$codigo_bulto_material', '1');";
 
 $result_cuerpo = odbc_exec($conn, $sql_cuerpo);
 

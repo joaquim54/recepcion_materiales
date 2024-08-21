@@ -1,4 +1,4 @@
-var correlativoGlobal = 1; // Definir una variable global para el correlativo
+var correlativoGlobal = 1; // variable global para el correlativo
 
 async function agregarMateriales() {
     var cantBultos = parseInt(document.getElementById('rusulto_cant_bult').value, 10);
@@ -46,7 +46,7 @@ async function agregarMateriales() {
                     success: function(response) {
                         console.log('Respuesta del servidor:', response);
                         bultosAgregados++;
-                        // Actualizar la tabla del front después de insertar cada bulto
+                        // Actualizar la tabla del front después de cada insert
                         var row = document.createElement('tr');
                         var codigoCell = document.createElement('td');
                         var descripcionCell = document.createElement('td');
@@ -102,6 +102,7 @@ async function agregarMateriales() {
                                 timer: 1500
                             });
                         }
+                       // mandarImpresion(); //eliminar en caso de solicitarse, esto es para que se imprima automaticamente al agregar un material, ojo que, si se elimina, se debe eliminar la funcion mandarImpresion() para mantener el orden en el codigo, aparte hacer un commit con eso 
                     },
                     error: function(xhr, status, error) {
                         console.error('Error en la inserción del bulto:', status, error);
@@ -129,5 +130,9 @@ async function agregarMateriales() {
     }
 }
 
-// Asociar el evento click al botón de agregar materiales
 document.getElementById('btnAgregarMaterial').addEventListener('click', agregarMateriales);
+
+
+function mandarImpresion(){
+    $('#btnImprimirTodo').click();
+}
