@@ -44,7 +44,7 @@ $(document).ready(function() {
         var descripcion = $(this).data('descripcion');
         var familia = $(this).data('familia');
 
-        // Guardar el material seleccionado en un array
+        // Guardar el material seleccionado en un array, arreglo especial para solucionar el problema de la familia exportadora
         materialesSeleccionados.push({
             subitem: subitem,
             descripcion: descripcion,
@@ -65,7 +65,7 @@ $(document).on('click', '.btnImprimir', function() {
     var codigoProducto = row.find('td:eq(0)').text();
     var cantidad = row.find('td:eq(3)').text();
     var lote = row.find('td:eq(9)').text(); 
-    var fecha = row.find('td:eq(8)').text();
+    var fecha = document.getElementById('fecha').value;
     var formatfecha = fecha.split('-');
     var fechaformateada = formatfecha[2] + '-' + formatfecha[1] + '-' + formatfecha[0];
     var material = materialesSeleccionados.find(mat => mat.subitem === codigoProducto);
@@ -107,9 +107,9 @@ function imprime() {
     var loteBulto = document.getElementById('modal-lote-bulto').innerText.replace('Lote/Bulto: ', '').trim();
     var proveedor = document.getElementById('modal-proveedor').innerText.trim();
     var cantidad = document.getElementById('modal-cantidad').innerText.replace('Cant: ', '').trim();
-    var fechaRec = document.getElementById('modal-fechaRec').innerText.replace('Fecha: ', '').trim();
+    var fecha = document.getElementById('modal-fechaRec').innerText.replace('Fecha: ', '').trim();
     
-    var url = `imprimir/pdf_unitario.php?lote=${encodeURIComponent(loteqr)}&familia=${encodeURIComponent(familia)}&empresa=${encodeURIComponent(empresa)}&codProducto=${encodeURIComponent(codProducto)}&descProducto=${encodeURIComponent(descProducto)}&loteBulto=${encodeURIComponent(loteBulto)}&proveedor=${encodeURIComponent(proveedor)}&cantidad=${encodeURIComponent(cantidad)}&fechaRec=${encodeURIComponent(fechaRec)}`;
+    var url = `imprimir/pdf_unitario.php?lote=${encodeURIComponent(loteqr)}&familia=${encodeURIComponent(familia)}&empresa=${encodeURIComponent(empresa)}&codProducto=${encodeURIComponent(codProducto)}&descProducto=${encodeURIComponent(descProducto)}&loteBulto=${encodeURIComponent(loteBulto)}&proveedor=${encodeURIComponent(proveedor)}&cantidad=${encodeURIComponent(cantidad)}&fecha=${encodeURIComponent(fecha)}`;
     
     window.open(url, '_blank', 'location=yes,height=570,width=520,scrollbars=yes,status=yes'); 
 }
@@ -134,7 +134,7 @@ $('#btnImprimirTodo').click(function() {
             var nGuia = $('#nGuia').val().trim();
             var loteqr = row.find('td:eq(9)').text().trim();
             var loteBulto = nPlanilla + " - " + nGuia + " - " + loteqr;
-            var fecha = row.find('td:eq(8)').text().trim();
+            var fecha = document.getElementById('fecha').value;
             var fechaSplit = fecha.split('-');
             var fechaFormateada = fechaSplit[2] + '-' + fechaSplit[1] + '-' + fechaSplit[0];
 
@@ -151,7 +151,7 @@ $('#btnImprimirTodo').click(function() {
                     loteBulto: loteBulto,
                     proveedor: proveedor,
                     cantidad: cantidad,
-                    fechaRec: fechaFormateada
+                    fecha: fechaFormateada
                 });
             }
         }
@@ -160,7 +160,7 @@ $('#btnImprimirTodo').click(function() {
     // Abrir una nueva ventana emergente
     var popup = window.open('', 'popup', 'location=yes,height=570,width=520,scrollbars=yes,status=yes');
 
-    // Crear un formulario dinámico
+    // Crear un formulario dinámico edición hecha para mandarlo por POST el get no soporta tantos caracteres
     let formularioPost = $('<form>', {
         'method': 'POST',
         'action': 'imprimir/pdf_itera_etiqueta.php',

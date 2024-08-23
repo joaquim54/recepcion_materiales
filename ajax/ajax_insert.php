@@ -1,5 +1,5 @@
 <?php
-include '../con_sql_prueba.php';
+include '../con_sql.php';
 
 // Recibir los datos enviados por la solicitud AJAX
 $zona = isset($_POST['zona']) ? $_POST['zona'] : '';
@@ -19,22 +19,38 @@ $unidad_bultos = isset($_POST['unidad_bultos']) ? $_POST['unidad_bultos'] : '';
 $cant_rec = isset($_POST['cant_rec']) ? $_POST['cant_rec'] : '';
 $correlativo = isset($_POST['correlativo']) ? $_POST['correlativo'] : '';
 $codigo_bulto_material = isset($_POST['id_bulto_material']) ? $_POST['id_bulto_material'] : '';
+$responsable =  isset($_POST['responsable']) ? $_POST['responsable'] : '';
+$cantidad_recibida = isset($_POST['unidad_bultos']) ? $_POST['unidad_bultos'] : '';
 
 
-/*// última aseguración en caso de que dos personas esten usando la web al mismo tiempo 
-$sql_max_planilla = "SELECT MAX(PLANILLA_REC) AS max_planilla FROM Bodega.dbo.TIT_RECEPCIONMATERIALES WHERE COD_TEM = '$cod_tem'";
+$val_log = "SELECT COUNT(*) FROM consultas.dbo.log_recepcion_materiales WHERE responsable <> '$responsable' 
+            AND fecha = convert(smalldatetime, '$fecha', 120) 
+            AND planilla = '$nplanilla'";
+$result_val_log = odbc_exec($conn, $val_log);
+$row_val_log = odbc_fetch_array($result_val_log);
+
+
+if ($row_val_log['count'] > 0) {
+    $nplanilla = $nplanilla + 1;
+}
+
+
+
+// última aseguración en caso de que dos personas esten usando la web al mismo tiempo 
+
+/*
+$sql_max_planilla = "SELECT MAX(PLANILLA_REC) AS max_planilla FROM Erpfrusys.dbo.TIT_RECEPCIONMATERIALES WHERE COD_TEM = '$cod_tem'";
 $result_max_planilla = odbc_exec($conn, $sql_max_planilla);
 $row_max_planilla = odbc_fetch_array($result_max_planilla);
 $max_planilla = $row_max_planilla['max_planilla'];
 
 if ($nplanilla <= $max_planilla) {
     $nplanilla = $max_planilla + 1;
-}*/
+}
 
-
-
+*/
 // Verificar si ya existe un registro en TIT_RECEPCIONMATERIALES para la planilla específica
-$sql_check_titulo = "SELECT COUNT(*) AS count FROM Bodega.dbo.TIT_RECEPCIONMATERIALES WHERE PLANILLA_REC = '$nplanilla'";
+$sql_check_titulo = "SELECT COUNT(*) AS count FROM Erpfrusys.dbo.TIT_RECEPCIONMATERIALES WHERE PLANILLA_REC = '$nplanilla' and COD_TEM = '$cod_tem'";
 $result_check_titulo = odbc_exec($conn, $sql_check_titulo);
 $row_check_titulo = odbc_fetch_array($result_check_titulo);
 
@@ -48,8 +64,6 @@ if ($row_check_titulo['count'] == 0) {
     CONVERT(smalldatetime, '$fecha', 120), '$nGuia', '$bodegaOrigen','0');";
 
     $result_titulo = odbc_exec($conn, $sql_titulo);
-
-
 }
 
 // Insertar en RECEPCIONMATERIALES (siempre)
@@ -58,17 +72,27 @@ $sql_cuerpo = "INSERT INTO Erpfrusys.dbo.RECEPCIONMATERIALES
 VALORCOMPRA, VALORVENTA,
 FECHA_VENC, id_lote_venc, MONEDA) 
 VALUES 
-('$cod_emp', '$cod_tem', '$zona', '$nplanilla', '$correlativo', '$code_material', '$cant_rec',
+('$cod_emp', '$cod_tem', '$zona', '$nplanilla', '$correlativo', '$code_material', '$cantidad_recibida',
 '0','0', convert(smalldatetime,'$fechaVencimiento',120), '$codigo_bulto_material', '1');";
 
 $result_cuerpo = odbc_exec($conn, $sql_cuerpo);
 
 
-if($result_titulo && $result_cuerpo){
+if ($result_titulo && $result_cuerpo) {
     echo "correctamente";
-}else{
-    echo "mal" .odbc_errormsg($conn);
+} else {
+    echo "mal" . odbc_errormsg($conn);
     echo $sql_cuerpo;
 }
 
-?>
+if ($result_titulo) {
+
+    $sql_log = "INSERT INTO consultas.dbo.log_recepcion_materiales
+    (tipo_mov, fecha, planilla, responsable)
+    VALUES
+    ('$tipo', convert(smalldatetime, '$fecha', 120), '$nplanilla', '$responsable');";
+
+    $result_log = odbc_exec($conn, $sql_log);
+
+    echo $sql_log;
+}

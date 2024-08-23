@@ -16,7 +16,7 @@
         document.getElementById('codigo_bulto_material').value = bultoMaterialValue;
     });
 
-    // Asegura que solo se puedan ingresar valores numéricos y limita la longitud a 10 caracteres en el campo nGuia
+    //  que solo se puedan ingresar valores numéricos y limita la longitud a 10 caracteres en el campo nGuia
     nGuia.addEventListener('input', function(e) {
         var value = e.target.value;
         if (/[^0-9]/.test(value)) {

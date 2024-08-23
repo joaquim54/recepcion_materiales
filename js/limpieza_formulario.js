@@ -3,12 +3,15 @@ document.addEventListener('DOMContentLoaded', function() {
     var btnLimpiar = document.getElementById('btnLimpiar');
 
     btnLimpiar.addEventListener('click', function() {
-        var inputs = document.querySelectorAll('input:not(#nPlanilla), select');
+        var inputs = document.querySelectorAll('input:not(#nPlanilla):not(#fecha):not(#fechaVencimiento), select');
         
         inputs.forEach(function(input) {
             if (input.type === 'checkbox') {
                 input.checked = false; 
-            } else {
+            } else if(input.type !== 'date'){
+                input.value = '';
+            }
+            else {
                 input.value = ''; 
             }
         });

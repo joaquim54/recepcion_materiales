@@ -14,6 +14,7 @@ async function agregarMateriales() {
 
             var bultoData = {
                 zona: document.getElementById('zona').value,
+                responsable: document.getElementById('responsable').value,
                 nPlanilla: document.getElementById('nPlanilla').value,
                 tipo: document.getElementById('tipo').value,
                 fecha: document.getElementById('fecha').value,
@@ -92,7 +93,7 @@ async function agregarMateriales() {
                         // Abrir el collapse de la tabla si no está abierto
                         $('#mostrar_table').collapse('show');
 
-                        // Mostrar mensaje de éxito cuando todos los bultos se hayan agregado
+                        // sweet alert de exito
                         if (bultosAgregados === cantBultos) {
                             Swal.fire({
                                 position: "center",
@@ -120,7 +121,7 @@ async function agregarMateriales() {
             }
         }
 
-        // Limpiar todos los elementos para no producir errores
+        // Limpiar para no producir errores
         document.getElementById('rusulto_cant_bult').value = '';
         document.getElementById('unidad_bultos').value = '';
         document.getElementById('cant_rec').value = '';

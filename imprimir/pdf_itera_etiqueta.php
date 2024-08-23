@@ -9,7 +9,7 @@ class PDF_Label extends FPDF
         parent::__construct($orientation, $unit, $format);
     }
 
-    function AddLabel($qrPath, $familia, $empresa, $codProducto, $descProducto, $loteBulto, $proveedor, $cantidad, $fechaRec)
+    function AddLabel($qrPath, $familia, $empresa, $codProducto, $descProducto, $loteBulto, $proveedor, $cantidad, $fecha)
     {
         $this->AddPage();
 
@@ -38,7 +38,7 @@ class PDF_Label extends FPDF
         // Lote/Bulto
         $this->SetFont('Arial', '', 10);
         $this->SetXY(10, 57);
-        $this->Cell(80, 5, " " . $loteBulto, 0, 1, 'C');
+        $this->Cell(80, 5, "Lote: " . $loteBulto, 0, 1, 'C');
 
         // Proveedor
         $this->SetFont('Arial', '', 10);
@@ -53,7 +53,7 @@ class PDF_Label extends FPDF
         // Fecha de Recepción
         $this->SetFont('Arial', '', 10);
         $this->SetXY(10, 72);  
-        $this->Cell(80, 5, "" . $fechaRec, 0, 1, 'C');
+        $this->Cell(80, 5, "" . $fecha, 0, 1, 'C');
     }
 }
 
@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             "codProducto" => $etiqueta['codProducto'],
             "Cantidad" => $etiqueta['cantidad'],
             "Lote" => $etiqueta['loteqr'],
-            "Fecha" => $etiqueta['fechaRec']
+            "Fecha" => $etiqueta['fecha']
         ));
 
         $qrPath = sys_get_temp_dir() . '/qr_' . md5($etiqueta['codProducto'] . $etiqueta['loteBulto']) . '.png';
@@ -87,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $etiqueta['loteBulto'],
             $etiqueta['proveedor'],
             $etiqueta['cantidad'],
-            $etiqueta['fechaRec']
+            $etiqueta['fecha']
         );
 
         if (file_exists($qrPath)) {
@@ -95,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 
-    // Asegurarse de que no haya salida antes de esta línea
+
     $pdf->Output('I', 'Etiquetas.pdf');
 }
 ?>

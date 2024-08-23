@@ -1,8 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Obtiene las referencias a los elementos del DOM
+    
     var nPlanilla = document.getElementById('nPlanilla');
     var btnBusquedaOrden = document.getElementById('btnBusquedaOrden');
     var tipo = document.getElementById('tipo');
+    var responsable = document.getElementById('responsable');
     var bodegaOrigen = document.getElementById('bodegaOrigen');
     var bodegaDestino = document.getElementById('bodegaDestino');
     var proveedor = document.getElementById('proveedor'); 

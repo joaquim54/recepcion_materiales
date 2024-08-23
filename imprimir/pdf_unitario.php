@@ -9,7 +9,7 @@ class PDF_Label extends FPDF
         parent::__construct($orientation, $unit, $format);
     }
 
-    function AddLabel($qrPath, $familia, $empresa, $codProducto, $descripcion, $loteBulto, $proveedor, $cantidad, $fechaRec)
+    function AddLabel($qrPath, $familia, $empresa, $codProducto, $descripcion, $loteBulto, $proveedor, $cantidad, $fecha)
     {
         $this->AddPage();
 
@@ -53,7 +53,7 @@ class PDF_Label extends FPDF
         // Fecha de Recepción
         $this->SetFont('Arial', '', 10);
         $this->SetXY(10, 72);  
-        $this->Cell(80, 5, "" . $fechaRec, 0, 1, 'C');
+        $this->Cell(80, 5, "" . $fecha, 0, 1, 'C');
     }
 }
 
@@ -68,21 +68,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $lote = $_GET['lote'];
     $proveedor = $_GET['proveedor'];
     $cantidad = $_GET['cantidad'];
-    $fechaRec = $_GET['fechaRec'];
+    $fecha = $_GET['fecha'];
 
     // Generar QR localmente
     $qrData = json_encode(array(
         "CodigoProducto" => $codProducto,
         "Cantidad" => $cantidad,
         "Lote" => $lote,
-        "Fecha" => $fechaRec
+        "Fecha" => $fecha
     ));
 
     $qrPath = sys_get_temp_dir() . '/qr_' . md5($codProducto . $loteqr) . '.png';
     QRcode::png($qrData, $qrPath, QR_ECLEVEL_L, 10);
 
     $pdf = new PDF_Label();
-    $pdf->AddLabel($qrPath, $familia, $empresa, $codProducto, $descripcion, $loteBulto, $proveedor, $cantidad, $fechaRec);
+    $pdf->AddLabel($qrPath, $familia, $empresa, $codProducto, $descripcion, $loteBulto, $proveedor, $cantidad, $fecha);
 
     if (file_exists($qrPath)) {
         unlink($qrPath);

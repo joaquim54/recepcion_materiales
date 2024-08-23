@@ -1,6 +1,16 @@
 <?php
+session_start();
+
 include 'con_sql.php';
 $hoy = date("Y-m-d");
+
+
+if (isset($_SESSION['user'])) {
+    $responsable = $_SESSION['user'];
+} else {
+    $responsable = ''; 
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -48,7 +58,7 @@ $hoy = date("Y-m-d");
                     <label for="nPlanilla">N° Planilla:</label>
                     <?php
                     //llama a la max planilla + 1, osea, la siguiente planilla a la ultima registrada 
-                    $sql_planilla = "SELECT max(tr.PLANILLA_REC)+1 AS planilla_tit_rm FROM erpfrusys.dbo.TIT_RECEPCIONMATERIALES tr WHERE tr.COD_TEM = " . $cod_tem;
+                    $sql_planilla = "SELECT isnull(max(tr.PLANILLA_REC)+1, 1) AS planilla_tit_rm FROM erpfrusys.dbo.TIT_RECEPCIONMATERIALES tr WHERE tr.COD_TEM = " . $cod_tem;
                     $result = odbc_exec($conn, $sql_planilla);
                     $row = odbc_fetch_array($result);
                     $planilla_tit_rm = $row['planilla_tit_rm'];
@@ -67,6 +77,9 @@ $hoy = date("Y-m-d");
                 <div class="section">
                     <label for="fecha">Fecha:</label>
                     <input type="date" id="fecha" name="fecha" class="form-control" value="<?php echo $hoy; ?>">
+                </div>
+                <div class="section">
+                <input type="text" id="responsable" name="responsable" class="form-control input" value="<?php echo htmlspecialchars($responsable); ?>" readonly>
                 </div>
             </div>
             <div class="text-center d-flex justify-content-center">
