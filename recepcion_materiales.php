@@ -191,7 +191,7 @@ if (isset($_SESSION['user'])) {
                 <!-- Botones de acción -->
                 <div class="form-row mt-4">
                     <div class="col text-center">
-                        <button type="button" id="btnAgregarMaterial" name="btnAgregarMaterial" class="btn btn-primary mr-2" role="button" aria-expanded="false" aria-controls="mostrar_table" disabled>
+                        <button type="button" id="btnAgregarMaterial" name="btnAgregarMaterial" class="btn btn-primary mr-2" role="button" aria-expanded="false" aria-controls="mostrar_table">
                             <i class="fa-solid fa-plus"></i> Agregar materiales
                         </button>
                         <button type="button" id="btnImprimirTodo" name="btnImprimirTodo" class="btn btn-secondary" role="button" aria-expanded="false" disabled>
@@ -394,9 +394,6 @@ if (isset($_SESSION['user'])) {
             </div>
         </div>
     </div>
-
-    <!-- Modal para mostrar todos las etiquetas -->
-
 
     <!-- jQuery y Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>

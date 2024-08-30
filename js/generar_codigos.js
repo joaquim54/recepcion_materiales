@@ -48,19 +48,32 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-    // Cálculo de la cantidad recibida
-    document.addEventListener('DOMContentLoaded', function() {
-        var rusultoCantBult = document.getElementById('rusulto_cant_bult');
-        var unidadBultos = document.getElementById('unidad_bultos');
-        var cantRec = document.getElementById('cant_rec');
 
-        function calcularCantidadRecibida() {
-            var cantBultos = parseFloat(rusultoCantBult.value) || 0;
-            var unidadBultosValue = parseFloat(unidadBultos.value) || 0;
-            var totalCantidad = cantBultos * unidadBultosValue;
-            cantRec.value = totalCantidad;
-        }
+// Cálculo de la cantidad recibida
+document.addEventListener('DOMContentLoaded', function() {
+    var rusultoCantBult = document.getElementById('rusulto_cant_bult');
+    var unidadBultos = document.getElementById('unidad_bultos');
+    var cantRec = document.getElementById('cant_rec');
 
-        rusultoCantBult.addEventListener('input', calcularCantidadRecibida);
-        unidadBultos.addEventListener('input', calcularCantidadRecibida);
+    function calcularCantidadRecibida() {
+        var cantBultos = parseFloat(rusultoCantBult.value) || 0;
+        var unidadBultosValue = parseFloat(unidadBultos.value) || 0;
+        var totalCantidad = cantBultos * unidadBultosValue;
+
+        cantRec.value = Math.round(totalCantidad); // Redondear a entero
+    }
+
+    function formatNumber(number) {
+        return number.toFixed(2).replace(/\./g, ',').replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+    // Aplicar el cálculo mientras se escribe
+    rusultoCantBult.addEventListener('input', calcularCantidadRecibida);
+    unidadBultos.addEventListener('input', calcularCantidadRecibida);
+
+    unidadBultos.addEventListener('blur', function() {
+        var unidadBultosValue = parseFloat(unidadBultos.value) || 0;
+        unidadBultos.value = formatNumber(unidadBultosValue);
     });
+});
+

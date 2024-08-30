@@ -22,19 +22,22 @@ $codigo_bulto_material = isset($_POST['id_bulto_material']) ? $_POST['id_bulto_m
 $responsable =  isset($_POST['responsable']) ? $_POST['responsable'] : '';
 $cantidad_recibida = isset($_POST['unidad_bultos']) ? $_POST['unidad_bultos'] : '';
 
+$unidad_bultos = intval(str_replace(',', '.', str_replace('.', '', $unidad_bultos)));
+echo $unidad_bultos;
+
 
 $val_log = "SELECT COUNT(*) FROM consultas.dbo.log_recepcion_materiales WHERE responsable <> '$responsable' 
             AND fecha = convert(smalldatetime, '$fecha', 120) 
-            AND planilla = '$nplanilla'";
+            AND planilla = '$nplanilla';";
 $result_val_log = odbc_exec($conn, $val_log);
 $row_val_log = odbc_fetch_array($result_val_log);
 
 
+// echo $val_log;
+
 if ($row_val_log['count'] > 0) {
     $nplanilla = $nplanilla + 1;
 }
-
-
 
 // última aseguración en caso de que dos personas esten usando la web al mismo tiempo 
 
@@ -72,17 +75,22 @@ $sql_cuerpo = "INSERT INTO Erpfrusys.dbo.RECEPCIONMATERIALES
 VALORCOMPRA, VALORVENTA,
 FECHA_VENC, id_lote_venc, MONEDA) 
 VALUES 
-('$cod_emp', '$cod_tem', '$zona', '$nplanilla', '$correlativo', '$code_material', '$cantidad_recibida',
+('$cod_emp', '$cod_tem', '$zona', '$nplanilla', '$correlativo', '$code_material', '$unidad_bultos',
 '0','0', convert(smalldatetime,'$fechaVencimiento',120), '$codigo_bulto_material', '1');";
 
 $result_cuerpo = odbc_exec($conn, $sql_cuerpo);
+
+if (!$result_cuerpo) {
+    echo "mal: " . $sql_cuerpo; // Imprimir "mal" + la consulta si falla
+    exit;
+}
 
 
 if ($result_titulo && $result_cuerpo) {
     echo "correctamente";
 } else {
-    echo "mal" . odbc_errormsg($conn);
-    echo $sql_cuerpo;
+    echo "mal  ";
+
 }
 
 if ($result_titulo) {
@@ -94,5 +102,4 @@ if ($result_titulo) {
 
     $result_log = odbc_exec($conn, $sql_log);
 
-    echo $sql_log;
 }

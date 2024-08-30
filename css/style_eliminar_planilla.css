@@ -1,0 +1,25 @@
+body {
+    background-color: #f8f9fa;
+    text-align: center;
+}
+.container {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+
+}
+h3 {
+    color: #343a40;
+    margin-bottom: 20px;
+
+}
+.btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+.btn-danger:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+}

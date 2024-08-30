@@ -5,6 +5,106 @@ async function agregarMateriales() {
     var tableBody = document.querySelector('#mostrar_table tbody');
     var unidadBultosValue = document.getElementById('unidad_bultos').value;
 
+    if (nPlanilla.value.trim() === "") {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Campo requerido',
+            text: 'Debe ingresar un número de planilla',
+            confirmButtonText: 'Aceptar'
+        });
+        return;
+    }
+    if (tipo.value === "") {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Campo requerido',
+            text: 'Debe seleccionar un tipo de orden',
+            confirmButtonText: 'Aceptar'
+        });
+        return;
+    }
+    if (zona.value === "") {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Campo requerido',
+            text: 'Debe seleccionar una zona',
+            confirmButtonText: 'Aceptar'
+        });
+        return;
+    }
+    if (fecha.value === "") {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Campo requerido',
+            text: 'Debe seleccionar una fecha',
+            confirmButtonText: 'Aceptar'
+        });
+        return;
+    }
+    if (bodegaDestino.value === "") {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Campo requerido',
+            text: 'Debe seleccionar una bodega destino',
+            confirmButtonText: 'Aceptar'
+        });
+        return;
+    }
+    if (nGuia.value === "") {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Campo requerido',
+            text: 'Debe ingresar un número de guía',
+            confirmButtonText: 'Aceptar'
+        });
+        return;
+    }
+    if (proveedor.value === "") {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Campo requerido',
+            text: 'Debe seleccionar un proveedor',
+            confirmButtonText: 'Aceptar'
+        });
+        return;
+    }
+    if (id_embalaje.value === "") {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Campo requerido',
+            text: 'Debe seleccionar un embalaje',
+            confirmButtonText: 'Aceptar'
+        });
+        return;
+    }
+    if (fechaVencimiento.value === "") {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Campo requerido',
+            text: 'Debe seleccionar una fecha de vencimiento',
+            confirmButtonText: 'Aceptar'
+        });
+        return;
+    }
+    if (rusulto_cant_bult.value === "") {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Campo requerido',
+            text: 'Debe ingresar una cantidad de bultos',
+            confirmButtonText: 'Aceptar'
+        });
+        return;
+    }
+    if (unidad_bultos.value === "") {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Campo requerido',
+            text: 'Debe seleccionar una unidad de bultos',
+            confirmButtonText: 'Aceptar'
+        });
+        return;
+    }
+
     if (!isNaN(cantBultos) && cantBultos > 0) {
         var bultosAgregados = 0;
         for (var i = 0; i < cantBultos; i++) {
@@ -46,6 +146,13 @@ async function agregarMateriales() {
                     data: bultoData,
                     success: function(response) {
                         console.log('Respuesta del servidor:', response);
+                        if (response.includes('clave duplicada')) {
+                            alert("Favor crear nuevamente la planilla de despacho, ya que se ha agregado un nuevo material");
+                            window.location.reload();
+                        } else if (response === 'mal') {
+                            alert("Favor crear nuevamente la planilla de despacho, ya que se ha agregado un nuevo material");
+                            window.location.reload();
+                        } 
                         bultosAgregados++;
                         // Actualizar la tabla del front después de cada insert
                         var row = document.createElement('tr');

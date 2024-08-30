@@ -26,32 +26,32 @@ class PDF_Label extends FPDF
         $this->Cell(80, 5, $empresa, 0, 1, 'C');
 
         // Código del Producto
-        $this->SetFont('Arial', '', 10);
+        $this->SetFont('Arial', 'B', 10);
         $this->SetXY(10, 43);
         $this->Cell(80, 5, "Cod. Producto: " . $codProducto, 0, 1, 'C');
 
         // Descripción
-        $this->SetFont('Arial', '', 10);
+        $this->SetFont('Arial', 'B', 10);
         $this->SetXY(10, 48);
         $this->MultiCell(80, 5, $descripcion, 0, 'C');
 
         // Lote/Bulto
-        $this->SetFont('Arial', '', 10);
+        $this->SetFont('Arial', 'B', 10);
         $this->SetXY(10, 57);
         $this->Cell(80, 5, " " . $loteBulto, 0, 1, 'C');
 
         // Proveedor
-        $this->SetFont('Arial', '', 10);
+        $this->SetFont('Arial', 'B', 10);
         $this->SetXY(10, 62);
         $this->Cell(80, 5, $proveedor, 0, 1, 'C');
 
         // Cantidad
-        $this->SetFont('Arial', '', 10);
+        $this->SetFont('Arial', 'B', 10);
         $this->SetXY(10, 67);
         $this->Cell(80, 5, "Cant:" . $cantidad, 0, 1, 'C');
 
         // Fecha de Recepción
-        $this->SetFont('Arial', '', 10);
+        $this->SetFont('Arial', 'B', 10);
         $this->SetXY(10, 72);  
         $this->Cell(80, 5, "" . $fecha, 0, 1, 'C');
     }

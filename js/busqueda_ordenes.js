@@ -9,6 +9,41 @@ btnBusquedaOrden.addEventListener('click', function() {
         },
         success: function(response) {
             try {
+                btnBusquedaOrden.addEventListener('click', function() {
+                    var nPlanillaValue = nPlanilla.value.trim();
+                
+                    $.ajax({
+                        url: 'ajax/busqueda_compra.php',
+                        type: 'POST',
+                        data: {
+                            nPlanilla: nPlanillaValue 
+                        },
+                        success: function(response) {
+                            try {
+                                var result = JSON.parse(response);
+                                if (result.existePlanilla) {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Planilla ya utilizada',
+                                        text: 'La planilla que intentas buscar ya ha sido utilizada.'
+                                    });
+                                } else {
+                                    // Código existente para manejar respuesta si la planilla no ha sido utilizada
+                                }
+                            } catch (e) {
+                                console.error("Error parsing JSON: ", e);
+                                Swal.fire({
+                                    position: "center",
+                                    icon: "error",
+                                    title: "Error en la respuesta",
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                            }
+                        }
+                    });
+                });
+                
                 var result = JSON.parse(response);
             } catch (e) {
                 console.error("Error parsing JSON: ", e);
